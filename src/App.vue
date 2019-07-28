@@ -1,28 +1,46 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <math-editor></math-editor> -->
+    <app-nav></app-nav>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+    <!-- <md-editor></md-editor> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import mdEditor from "./components/mdEditor";
+import mathEditor from "./components/mathEditor";
+import nav from "./components/nav";
 
 export default {
-  name: 'app',
   components: {
-    HelloWorld
+    "app-nav": nav,
+    "md-editor": mdEditor,
+    "math-editor": mathEditor
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.CodeMirror {
+  border: 1px solid #eee;
+  overflow-x: hidden;
+  height: auto;
+  width: 70%;
+}
+
+.CodeMirror-scroll {
+  min-height: 500px;
+}
+
+.CodeMirror-activeline-background.CodeMirror-linebackground {
+  background: rgba(100, 100, 100, 0.5);
+}
+
+span.CodeMirror-selectedtext {
+  color: #263238;
+  background-color: rgba(98, 240, 3, 0.863);
 }
 </style>
