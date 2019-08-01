@@ -26,6 +26,11 @@ export default {
 </script>
 
 <style>
+html {
+  height: 100%;
+  background-color: white;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -46,6 +51,7 @@ body {
 .CodeMirror-activeline-background.CodeMirror-linebackground {
   background: rgba(100, 100, 100, 0.5);
 }
+
 
 span.CodeMirror-selectedtext {
   color: #263238;

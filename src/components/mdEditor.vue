@@ -1,28 +1,34 @@
 <template>
-  <div>
-    <div class="md-input">
-      <codemirror
-        v-model="mdInput"
-        v-bind:options="cmOptions"
-        v-on:update="onCmUpdate"
-        v-on:blur="onCmDefocus"
-        v-on:ready="renderMath"
-      ></codemirror>
+  <div class="outer">
+    <div class="container">
+      <div class="md-input">
+        <codemirror
+          v-model="mdInput"
+          v-bind:options="cmOptions"
+          v-on:update="onCmUpdate"
+          v-on:blur="onCmDefocus"
+          v-on:ready="renderMath"
+        ></codemirror>
 
-      <md-save v-bind:mdInput="mdInput"></md-save>
+        <md-save v-bind:mdInput="mdInput"></md-save>
 
-      <!-- <button v-on:click="test">test</button> -->
+        <!-- <button v-on:click="test">test</button> -->
+      </div>
+
+      <div class="md-preview" v-show="!isFullScreen">
+        <h2>Preview</h2>
+        <div v-html="mdRender"></div>
+      </div>
     </div>
+    <app-footer v-bind:isMdSnippet="true" v-bind:isFullScreen="isFullScreen">
+      <li slot-scope="props" slot="custom-md-btn1">
+        <a href="#fullscreen" v-on:click="props.toggleFullScreen"></a>
+      </li>
 
-    <div class="md-preview">
-      <h2>Preview</h2>
-      <div v-html="mdRender"></div>
-    </div>
-
-    <app-footer>
-
+      <li slot="custom-md-btn2">
+        <a href="#">slot 2</a>
+      </li>
     </app-footer>
-
   </div>
 </template>
 
@@ -30,7 +36,6 @@
 /*
 ToDo: snippets
 */
-
 
 /* eslint-disable */
 import "codemirror/lib/codemirror.css";
@@ -64,7 +69,7 @@ import { setPriority } from "os";
 export default {
   components: {
     "md-save": mdSave,
-    "app-footer": appFooter,
+    "app-footer": appFooter
   },
   data() {
     return {
@@ -80,10 +85,14 @@ export default {
         lineNumbers: true,
         lineWrapping: true
       },
-      cmObject: {}
+      cmObject: {},
+      isFullScreen: false
     };
   },
   methods: {
+    toggleFullScreen() {
+      this.isFullScreen = !this.isFullScreen;
+    },
     test() {
       this.mdInput = "new text";
     },
@@ -99,7 +108,7 @@ export default {
       });
     },
     onCmUpdate(cm) {
-      console.log("cm updated");
+      // Expose codemirror object to data
       this.cmObject = cm;
 
       // Save text to localStorage
@@ -132,10 +141,9 @@ export default {
     if (localStorage.getItem("md-input"))
       this.mdInput = localStorage.getItem("md-input");
 
-    // listen to 'mdInputSaved'
+    // Listen to 'mdInputSaved'
     bus.$on("mdInputSaved", data => {
       this.mdInputSaved = data;
-      console.log(`Editor on mdInputSaved ${data}`);
     });
 
     // Listen to 'loadArticle': load content from local storage
@@ -143,21 +151,69 @@ export default {
       this.mdInput = data;
       setTimeout(() => bus.$emit("mdInputSaved", true), 100);
     });
+
+    // Listen to snippet insertion
+    bus.$on("insertSnippet", data => {
+      // Insert snippet
+      this.mdInput += data.content;
+
+      // Set cursor position
+      var linenum = this.cmObject.getCursor().line + 0;
+      var ch = this.cmObject.getCursor().ch + 0;
+      this.cmObject.focus();
+
+      // Move to cursor position
+      var cleanInput = this.mdInput.replace(/\r?\n|\r/g, "");
+      // Codemirror undocumented api: triggerOnKeyDown
+
+      setTimeout(() => {
+        // Press 'end' key
+        this.cmObject.triggerOnKeyDown({ type: "keydown", keyCode: 35 });
+      }, 50);
+      // Move cursor forward based on cursorPos
+      for (let i = 0; i > parseInt(data.cursorPos); i--) {
+        setTimeout(() => {
+          // Press 'leftArrow' key
+          this.cmObject.triggerOnKeyDown({ type: "keydown", keyCode: 37 });
+        }, 100);
+      }
+    });
+
+    // Listen on toggle full screen
+    bus.$on("toggleFullScreen", data => {
+      this.isFullScreen = !this.isFullScreen;
+      
+      var btn = document.querySelector('a[href="#fullscreen"]');
+      console.log(btn)
+      if (this.isFullScreen)
+        btn.className = 'btn-full-screen';
+      else
+        btn.className = 'btn';
+    });
   },
-  mounted: function() {}
+
+  mounted: function() {
+    /*
+    document.addEventListener("keydown", () => {
+      console.log("pressed key");
+    });
+    */
+  }
 };
 </script>
 
 <style>
+.container {
+  padding: 0 15%;
+}
 .md-input .CodeMirror {
-  border: 1px solid #eee;
-  overflow-x: hidden;
   height: auto;
-  width: 70%;
+  width: auto;
+  font-size: 1.1em;
 }
 
 .md-input .CodeMirror-scroll {
-  min-height: 500px;
+  min-height: 35em;
 }
 
 .md-input .CodeMirror-activeline-background.CodeMirror-linebackground {
@@ -168,5 +224,31 @@ export default {
   color: #263238;
   background-color: rgba(98, 240, 3, 0.863);
 }
+
+.full-screen {
+  position: fixed;
+  margin-top: 50px;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.full-screen .CodeMirror-scroll {
+  min-height: 700px;
+}
+
+.full-screen .CodeMirror {
+  width: auto;
+}
+
+
+.btn-full-screen {
+  background: #eee;
+  color: #444;
+}
 </style>
 
+<style scoped>
+</style>

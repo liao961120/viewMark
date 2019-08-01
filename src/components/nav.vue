@@ -37,7 +37,7 @@ a {
 nav {
   background: #444;
   padding: 14px 0 14px 0;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   width: 100%;
   position: sticky;
   top: 0;

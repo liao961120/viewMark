@@ -33,33 +33,33 @@
     </form>
 
     <div class="snippets-preview">
-        <table>
-          <th>Name</th>
-          <th>Snippet (Md)</th>
-          <th>Rendered</th>
-          <tr v-for="(snippet, idx) in mdSnippets" v-bind:key="snippet.id">
-            <td class="snippet-name">{{ snippet.name }}</td>
-            <td class="snippet">{{ snippet.snippet }}</td>
-            <td class="preview" v-html="toMd(snippet.snippet)"></td>
-            <td>
-              <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
-            </td>
-          </tr>
-        </table>
+      <table>
+        <th>Name</th>
+        <th>Snippet (Md)</th>
+        <th>Rendered</th>
+        <tr v-for="(snippet, idx) in mdSnippets" v-bind:key="snippet.id">
+          <td class="snippet-name">{{ snippet.name }}</td>
+          <td class="snippet">{{ snippet.snippet }}</td>
+          <td class="preview" v-html="toMd(snippet.snippet)"></td>
+          <td>
+            <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
+          </td>
+        </tr>
+      </table>
 
-        <table>
-          <th>Name</th>
-          <th>Snippet (Math)</th>
-          <th>Rendered</th>
-          <tr v-for="(snippet, idx) in mathSnippets" v-bind:key="snippet.id">
-            <td class="snippet-name">{{ snippet.name }}</td>
-            <td class="snippet">{{ snippet.snippet }}</td>
-            <td class="preview latex" v-html="toMath(snippet.snippet)"></td>
-            <td>
-              <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
-            </td>
-          </tr>
-        </table>
+      <table>
+        <th>Name</th>
+        <th>Snippet (Math)</th>
+        <th>Rendered</th>
+        <tr v-for="(snippet, idx) in mathSnippets" v-bind:key="snippet.id">
+          <td class="snippet-name">{{ snippet.name }}</td>
+          <td class="snippet">{{ snippet.snippet }}</td>
+          <td class="preview latex" v-html="toMath(snippet.snippet)"></td>
+          <td>
+            <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -71,6 +71,9 @@ let marked = require("marked");
 // katex
 import katex from "katex";
 import "katex/dist/katex.min.css";
+
+// Event bus
+import { bus } from "../main";
 
 export default {
   data() {
@@ -117,6 +120,12 @@ export default {
       this.toRegister.cursorPos = 0;
       this.toRegister.snippet = "";
       this.toRegister.name = "";
+
+      // Emit event
+      bus.$emit("updateSnippets", {
+        mdSnippets: this.mdSnippets,
+        mathSnippets: this.mathSnippets
+      });
     },
 
     removeSnippet: function(idx, isMdSnippet) {
@@ -125,6 +134,12 @@ export default {
 
       localStorage.setItem("mdSnippets", JSON.stringify(this.mdSnippets));
       localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
+
+      // Emit event
+      bus.$emit("updateSnippets", {
+        mdSnippets: this.mdSnippets,
+        mathSnippets: this.mathSnippets
+      });
     },
 
     toMd: function(value) {
@@ -145,7 +160,14 @@ export default {
       this.mdSnippets = JSON.parse(localStorage.getItem("mdSnippets"));
     if (localStorage.getItem("mathSnippets"))
       this.mathSnippets = JSON.parse(localStorage.getItem("mathSnippets"));
+
+    // Emit event
+    bus.$emit("updateSnippets", {
+      mdSnippets: this.mdSnippets,
+      mathSnippets: this.mathSnippets
+    });
   },
+
   filters: {}
 };
 </script>
@@ -169,7 +191,6 @@ input[type="number"] {
   width: 2.7em;
 }
 
-
 div.snippets-preview {
   display: flex;
 }
@@ -182,7 +203,8 @@ div > table {
   font-size: 0.8em;
   letter-spacing: 0.05em;
 }
-th, td {
+th,
+td {
   height: 3.2em;
   text-align: center;
   vertical-align: middle;

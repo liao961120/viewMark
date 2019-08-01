@@ -1,16 +1,3 @@
-function getPNodes(elem) {
-    var pElements = []
-    var nodes = elem.childNodes;
-    for (var i=0, i=nodes.length; i--;) {
-        var node = nodes[0], nodeName = node.nodeName;
-        if (nodeName == 'P')
-            pElements.push(node)
-        else if (nodeName == "P")
-            nodes = nodes.concat(getPNodes(node));
-    }
-    return nodes
-}
-
 function getTextNodesIn(elem, opt_fnFilter) {
   var textNodes = [];
   if (elem) {
@@ -31,19 +18,19 @@ function getTextNodesIn(elem, opt_fnFilter) {
 
 
 function getAllParents(ele) {
-    var nodes = [];
-    nodes.push(ele.nodeName);
-    while (ele.parentNode) {
-        nodes.unshift(ele.parentNode.nodeName);
-        ele = ele.parentNode;
-    }
-    return nodes
+  var nodes = [];
+  nodes.push(ele.nodeName);
+  while (ele.parentNode) {
+    nodes.unshift(ele.parentNode.nodeName);
+    ele = ele.parentNode;
+  }
+  return nodes
 }
 
+
 var utils = {
-    getPNodes,
-    getAllParents,
-    getTextNodesIn
+  getAllParents,
+  getTextNodesIn,
 }
 
 export default utils

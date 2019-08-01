@@ -1,9 +1,10 @@
 <template>
   <footer>
     <ul>
-      <li>
-        <slot name="custom-btn"></slot>
+      <li v-if="this.toggleFullScreen">
+          <a href="#" v-on:click="toggleFullScreen()">Full Screen</a>
       </li>
+      <slot name="custom-math-btn"></slot>
       <li v-for="snippet in snippets" v-bind:key="snippet.id">
         <a href="#" v-on:click="insertSnippet(snippet)">{{ snippet.name }}</a>
       </li>
@@ -12,13 +13,43 @@
 </template>
 
 <script>
+import { bus } from "../main";
+
 export default {
-  props: {},
+  props: {
+    isMdSnippet: {
+      type: Boolean
+    },
+    isFullScreen: {
+        type: Boolean
+    }
+  },
   data() {
-    return {};
+    return {
+      snippets: [],
+    };
   },
   methods: {
-    insertSnippet: function() {}
+    insertSnippet: function(snippet) {
+      bus.$emit("insertSnippet", {
+        content: snippet.snippet,
+        cursorPos: snippet.cursorPos
+      });
+    },
+    toggleFullScreen: function() {
+        bus.$emit('toggleFullScreen', {});
+    }
+  },
+  created() {
+    var item = ["mathSnippets", "mdSnippets"].splice(this.isMdSnippet, 1);
+
+    // Initialize
+    if (localStorage.getItem(item))
+      this.snippets = JSON.parse(localStorage.getItem(item));
+
+    bus.$on("updateSnippets", data => {
+      this.snippets = data[item];
+    });
   }
 };
 </script>
@@ -34,6 +65,7 @@ li {
   margin: 0 10px;
 }
 a {
+  font-size: 0.75em;
   color: #fff;
   text-decoration: none;
   padding: 6px 8px;
@@ -44,7 +76,9 @@ a:hover {
   color: #444;
 }
 
+
 footer {
+  float: center;
   background: #444;
   padding: 14px 0 14px 0;
   margin-bottom: 0px;
@@ -53,5 +87,11 @@ footer {
   bottom: 0;
   z-index: 100;
 }
+
+.btn-full-screen {
+  background: #eee;
+  color: #444;
+}
+
 </style>
 

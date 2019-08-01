@@ -12,11 +12,6 @@
     <!-- <button v-on:click="saveArticle">save</button> -->
     <br />
 
-    <div class="preview">
-      <ul>
-        <li>title: {{ title }}</li>
-      </ul>
-    </div>
   </div>
 </template>
 
