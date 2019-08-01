@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="math">
     <div class="math-input">
       <codemirror v-model="mathInput" v-bind:options="cmOptions"></codemirror>
     </div>
 
     <div class="math-preview">
-      <h2>Preview</h2>
+      <h3>Preview</h3>
       <div id="math-preview" v-html="mathRender"></div>
     </div>
   </div>
@@ -65,10 +65,39 @@ export default {
 </script>
 
 <style>
-.math-input .CodeMirror {
-  height: auto;
-  /*width: 50%;*/
+div.math {
+  display: flex
+}
+div.math > div {
+  flex: 50%;
+}
+
+div.math-input {
+  margin: 0 20px;
+}
+.math-preview {
+  margin: 0px 0px;
+  padding: 0 0px;
+}
+.math-preview > * {
+  text-align: center;
+  margin: 0.01em;
   font-size: 1.2em;
+  line-height: 1.8em;
+}
+.math-preview > h3 {
+  margin: 0px auto;
+  font-size: 1em;
+  text-align: center;
+}
+
+.math-input .CodeMirror {
+/*  margin: 0px 20px;  */
+/*  min-width: 300px;  */
+  height: auto;
+  width: auto;
+  font-size: 1.1em;
+  /*width: 90%;*/
 }
 
 .math-input .CodeMirror-scroll {

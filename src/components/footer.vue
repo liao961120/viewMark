@@ -1,21 +1,26 @@
 <template>
-  <nav>
+  <footer>
     <ul>
       <li>
-        <router-link to="/">Markdown</router-link>
+        <slot name="custom-btn"></slot>
       </li>
-      <li>
-        <router-link to="/math">Math</router-link>
-      </li>
-      <li>
-        <router-link to="/snippets">Snippets</router-link>
+      <li v-for="snippet in snippets" v-bind:key="snippet.id">
+        <a href="#" v-on:click="insertSnippet(snippet)">{{ snippet.name }}</a>
       </li>
     </ul>
-  </nav>
+  </footer>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {},
+  data() {
+    return {};
+  },
+  methods: {
+    insertSnippet: function() {}
+  }
+};
 </script>
 
 <style scoped>
@@ -34,17 +39,19 @@ a {
   padding: 6px 8px;
   border-radius: 10px;
 }
-nav {
-  background: #444;
-  padding: 14px 0 14px 0;
-  margin-bottom: 40px;
-  width: 100%;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.router-link-exact-active {
+a:hover {
   background: #eee;
   color: #444;
 }
+
+footer {
+  background: #444;
+  padding: 14px 0 14px 0;
+  margin-bottom: 0px;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+}
 </style>
+

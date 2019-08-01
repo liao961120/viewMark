@@ -18,6 +18,11 @@
       <h2>Preview</h2>
       <div v-html="mdRender"></div>
     </div>
+
+    <app-footer>
+
+    </app-footer>
+
   </div>
 </template>
 
@@ -49,7 +54,8 @@ import { setInterval, setTimeout } from "timers";
 let marked = require("marked");
 
 // components
-import mdSave from "./mdSave";
+import mdSave from "./mdSave.vue";
+import appFooter from "./footer.vue";
 
 // event bus
 import { bus } from "../main";
@@ -57,7 +63,8 @@ import { setPriority } from "os";
 
 export default {
   components: {
-    "md-save": mdSave
+    "md-save": mdSave,
+    "app-footer": appFooter,
   },
   data() {
     return {

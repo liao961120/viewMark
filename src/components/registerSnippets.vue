@@ -1,44 +1,191 @@
 <template>
   <div>
-    <ul>
-      <li>
-        <input type="text" required placeholder="Snippets" />
-      </li>
-      <li>
-        <input type="number" placeholder="Cursor position" step="1" />
-      </li>
-      <li>
-        Snippet Type:
-        <select v-model="isMdSnippet">
-          <option v-bind:value="true">Markdown</option>
-          <option v-bind:value="false">Math</option>
-        </select>
-      </li>
-      <li>
-        <button>Add Snippet</button>
-      </li>
-    </ul>
+    <form>
+      <h3>Register new snippet</h3>
+      <ul>
+        <li>
+          <input type="text" placeholder="Name" v-model="toRegister.name" />
+        </li>
+        <li>
+          <input type="text" placeholder="Snippets" v-model="toRegister.snippet" />
+        </li>
+        <li>
+          Cursor Position:
+          <input
+            type="number"
+            placeholder="Cursor position"
+            step="1"
+            max="0"
+            v-model="toRegister.cursorPos"
+          />
+        </li>
+        <li>
+          Snippet Type:
+          <select v-model="toRegister.isMdSnippet" required>
+            <option v-bind:value="true">Markdown</option>
+            <option v-bind:value="false">Math</option>
+          </select>
+        </li>
+        <li>
+          <button v-on:click="register">Add Snippet</button>
+        </li>
+      </ul>
+    </form>
+
+    <div class="snippets-preview">
+        <table>
+          <th>Name</th>
+          <th>Snippet (Md)</th>
+          <th>Rendered</th>
+          <tr v-for="(snippet, idx) in mdSnippets" v-bind:key="snippet.id">
+            <td class="snippet-name">{{ snippet.name }}</td>
+            <td class="snippet">{{ snippet.snippet }}</td>
+            <td class="preview" v-html="toMd(snippet.snippet)"></td>
+            <td>
+              <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
+            </td>
+          </tr>
+        </table>
+
+        <table>
+          <th>Name</th>
+          <th>Snippet (Math)</th>
+          <th>Rendered</th>
+          <tr v-for="(snippet, idx) in mathSnippets" v-bind:key="snippet.id">
+            <td class="snippet-name">{{ snippet.name }}</td>
+            <td class="snippet">{{ snippet.snippet }}</td>
+            <td class="preview latex" v-html="toMath(snippet.snippet)"></td>
+            <td>
+              <button v-on:click="removeSnippet(idx, snippet.isMdSnippet)">Remove</button>
+            </td>
+          </tr>
+        </table>
+    </div>
   </div>
 </template>
 
 <script>
+// Markdown parser
+let marked = require("marked");
+
+// katex
+import katex from "katex";
+import "katex/dist/katex.min.css";
+
 export default {
   data() {
     return {
-      isMdSnippet: true
+      toRegister: {
+        name: "",
+        snippet: "",
+        cursorPos: 0,
+        isMdSnippet: true
+      },
+      mdSnippets: [
+        {
+          name: "Link",
+          snippet: "[link](https://)",
+          cursorPos: 0,
+          isMdSnippet: true
+        }
+      ],
+      mathSnippets: [
+        {
+          name: "Fraction",
+          snippet: "\\frac{a}{b}",
+          cursorPos: -4,
+          isMdSnippet: false
+        }
+      ]
     };
-  }
+  },
+  methods: {
+    register: function() {
+      // Update data
+      if (this.toRegister.isMdSnippet)
+        this.mdSnippets.push(Object.assign({}, this.toRegister));
+      if (!this.toRegister.isMdSnippet)
+        this.mathSnippets.push(Object.assign({}, this.toRegister));
+
+      // Save to localStorage
+      if (this.mdSnippets.length > 0)
+        localStorage.setItem("mdSnippets", JSON.stringify(this.mdSnippets));
+      if (this.mathSnippets.length > 0)
+        localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
+
+      // Clean up
+      this.toRegister.cursorPos = 0;
+      this.toRegister.snippet = "";
+      this.toRegister.name = "";
+    },
+
+    removeSnippet: function(idx, isMdSnippet) {
+      if (isMdSnippet) this.mdSnippets.splice(idx, 1);
+      else this.mathSnippets.splice(idx, 1);
+
+      localStorage.setItem("mdSnippets", JSON.stringify(this.mdSnippets));
+      localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
+    },
+
+    toMd: function(value) {
+      // render Markdown
+      var temp = document.createElement("div");
+      temp.innerHTML = marked(value);
+      return temp.innerHTML;
+    },
+
+    toMath: function(value) {
+      var html = katex.renderToString(value, { throwOnError: false });
+      return html;
+    }
+  },
+
+  created() {
+    if (localStorage.getItem("mdSnippets"))
+      this.mdSnippets = JSON.parse(localStorage.getItem("mdSnippets"));
+    if (localStorage.getItem("mathSnippets"))
+      this.mathSnippets = JSON.parse(localStorage.getItem("mathSnippets"));
+  },
+  filters: {}
 };
 </script>
 
 
 <style scoped>
+form {
+  margin: 10px auto;
+  width: 12%;
+  min-width: 250px;
+  padding: 0 auto;
+}
+form > h3 {
+  text-align: center;
+}
 li {
   list-style-type: none;
   margin: 10px 0;
 }
-li:last-child {
-    /*float: center;*/
+input[type="number"] {
+  width: 2.7em;
+}
+
+
+div.snippets-preview {
+  display: flex;
+}
+div > table {
+  flex: 50%;
+  margin: 5%;
+}
+.snippet {
+  font-family: Monaco, "Courier New", Courier, monospace;
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
+}
+th, td {
+  height: 3.2em;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>
 

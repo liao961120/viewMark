@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <app-nav></app-nav>
-    <register-snippets></register-snippets>
     <!-- <math-editor></math-editor> -->
     <keep-alive>
       <router-view></router-view>
@@ -11,22 +10,28 @@
 </template>
 
 <script>
-import mdEditor from "./components/mdEditor";
-import mathEditor from "./components/mathEditor";
-import registerSnippets from "./components/registerSnippets";
+//import mdEditor from "./components/mdEditor";
+//import mathEditor from "./components/mathEditor";
+//import registerSnippets from "./components/registerSnippets";
 import nav from "./components/nav";
 
 export default {
   components: {
-    "register-snippets": registerSnippets,
     "app-nav": nav,
-    "md-editor": mdEditor,
-    "math-editor": mathEditor
+    //"register-snippets": registerSnippets,
+    //"md-editor": mdEditor,
+    //"math-editor": mathEditor
   }
 };
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
+
+
 .CodeMirror {
   border: 1px solid #eee;
   overflow-x: hidden;
