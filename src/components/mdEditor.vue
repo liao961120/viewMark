@@ -1,6 +1,7 @@
 <template>
   <div class="outer">
-    <div class="container">
+    <div v-bind:class="{'container': isFullScreen, 'flex': !isFullScreen}">
+
       <div class="md-input">
         <codemirror
           v-model="mdInput"
@@ -9,17 +10,14 @@
           v-on:blur="onCmDefocus"
           v-on:ready="renderMath"
         ></codemirror>
-
         <md-save v-bind:mdInput="mdInput"></md-save>
-
-        <!-- <button v-on:click="test">test</button> -->
       </div>
 
       <div class="md-preview" v-show="!isFullScreen">
-        <h2>Preview</h2>
         <div v-html="mdRender"></div>
       </div>
     </div>
+
     <app-footer v-bind:isMdSnippet="true" v-bind:isFullScreen="isFullScreen">
       <li slot-scope="props" slot="custom-md-btn1">
         <a href="#fullscreen" v-on:click="props.toggleFullScreen"></a>
@@ -86,7 +84,7 @@ export default {
         lineWrapping: true
       },
       cmObject: {},
-      isFullScreen: false
+      isFullScreen: true
     };
   },
   methods: {
@@ -182,17 +180,10 @@ export default {
     // Listen on toggle full screen
     bus.$on("toggleFullScreen", data => {
       this.isFullScreen = !this.isFullScreen;
-      
-      var btn = document.querySelector('a[href="#fullscreen"]');
-      console.log(btn)
-      if (this.isFullScreen)
-        btn.className = 'btn-full-screen';
-      else
-        btn.className = 'btn';
     });
   },
 
-  mounted: function() {
+  mounted() {
     /*
     document.addEventListener("keydown", () => {
       console.log("pressed key");
@@ -206,6 +197,23 @@ export default {
 .container {
   padding: 0 15%;
 }
+.flex {
+  display: flex;
+}
+
+.flex > div {
+  flex: 50%;
+  margin: 0 2%;
+  padding: 0 10px;
+}
+
+.flex > div.md-preview {
+  border-style: solid;
+  border-width: 1.5px;
+  border-radius: 10px;
+  font-family: 'Alegreya', Alegreya, Ubuntu
+}
+
 .md-input .CodeMirror {
   height: auto;
   width: auto;
@@ -242,7 +250,6 @@ export default {
 .full-screen .CodeMirror {
   width: auto;
 }
-
 
 .btn-full-screen {
   background: #eee;

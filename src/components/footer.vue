@@ -2,7 +2,7 @@
   <footer>
     <ul>
       <li v-if="this.toggleFullScreen">
-          <a href="#" v-on:click="toggleFullScreen()">Full Screen</a>
+        <a href="#" v-on:click="toggleFullScreen">Preview</a>
       </li>
       <slot name="custom-math-btn"></slot>
       <li v-for="snippet in snippets" v-bind:key="snippet.id">
@@ -21,12 +21,12 @@ export default {
       type: Boolean
     },
     isFullScreen: {
-        type: Boolean
+      type: Boolean
     }
   },
   data() {
     return {
-      snippets: [],
+      snippets: []
     };
   },
   methods: {
@@ -36,8 +36,15 @@ export default {
         cursorPos: snippet.cursorPos
       });
     },
-    toggleFullScreen: function() {
-        bus.$emit('toggleFullScreen', {});
+    toggleFullScreen: function(event) {
+      bus.$emit("toggleFullScreen", {});
+      setTimeout(() => {
+        var ele = event.target;
+        if (this.isFullScreen)
+          ele.className = "";
+        else
+          ele.className = "btn-full-screen";
+      }, 100);
     }
   },
   created() {
@@ -76,7 +83,6 @@ a:hover {
   color: #444;
 }
 
-
 footer {
   float: center;
   background: #444;
@@ -92,6 +98,5 @@ footer {
   background: #eee;
   color: #444;
 }
-
 </style>
 
