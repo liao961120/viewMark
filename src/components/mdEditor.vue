@@ -1,8 +1,8 @@
 <template>
   <div class="outer">
-    <div v-bind:class="{'container': isFullScreen, 'flex': !isFullScreen}">
-
-      <div class="md-input">
+    <md-save v-bind:mdInput="mdInput"></md-save>
+    <div v-bind:class="{'container': isFullScreen, 'two-cols': !isFullScreen}">
+      <div class="input md-input">
         <codemirror
           v-model="mdInput"
           v-bind:options="cmOptions"
@@ -10,10 +10,9 @@
           v-on:blur="onCmDefocus"
           v-on:ready="renderMath"
         ></codemirror>
-        <md-save v-bind:mdInput="mdInput"></md-save>
       </div>
 
-      <div class="md-preview" v-show="!isFullScreen">
+      <div class="preview md-preview" v-show="!isFullScreen">
         <div v-html="mdRender"></div>
       </div>
     </div>
@@ -31,10 +30,6 @@
 </template>
 
 <script>
-/*
-ToDo: snippets
-*/
-
 /* eslint-disable */
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/markdown/markdown";
@@ -71,7 +66,8 @@ export default {
   },
   data() {
     return {
-      mdInput: "$$\\frac{a}{b}$$",
+      mdInput:
+        "The pdf of the normal distribution is \n\n$$\n\\frac{1}{\\sqrt{2 \\pi} \\sigma} e ^ {- \\frac{(x - \\mu)^2}{2 \\sigma ^2}}\n$$",
       mdInputSaved: false,
       cmOptions: {
         // codemirror options
@@ -84,7 +80,8 @@ export default {
         lineWrapping: true
       },
       cmObject: {},
-      isFullScreen: true
+      cmObject2: {},
+      isFullScreen: false,
     };
   },
   methods: {
@@ -114,11 +111,16 @@ export default {
 
       // Set mdInputSaved to false
       bus.$emit("mdInputSaved", false);
-    },
-    onCmDefocus(cm) {
+
       // render Math
-      this.renderMath();
+      setTimeout(() => {
+        this.renderMath();
+      }, 0);
+
+      // Reload Prism
+      Prism.highlightAll();
     },
+    onCmDefocus(cm) {},
     currentCursor: function() {
       if (!this.cmObject.display) return "aa";
       var linenum = this.cmObject.getCursor().line;
@@ -161,20 +163,15 @@ export default {
       this.cmObject.focus();
 
       // Move to cursor position
-      var cleanInput = this.mdInput.replace(/\r?\n|\r/g, "");
-      // Codemirror undocumented api: triggerOnKeyDown
-
       setTimeout(() => {
-        // Press 'end' key
-        this.cmObject.triggerOnKeyDown({ type: "keydown", keyCode: 35 });
-      }, 50);
-      // Move cursor forward based on cursorPos
-      for (let i = 0; i > parseInt(data.cursorPos); i--) {
-        setTimeout(() => {
-          // Press 'leftArrow' key
-          this.cmObject.triggerOnKeyDown({ type: "keydown", keyCode: 37 });
-        }, 100);
-      }
+        console.log(this.cmObject, linenum, ch);
+        let ch_start = ch + parseInt(data.cursorPos[0]);
+        let ch_end = ch + parseInt(data.cursorPos[1]);
+        this.cmObject.setSelection(
+          { line: linenum, ch: ch_start },
+          { line: linenum, ch: ch_end }
+        );
+      }, 100);
     });
 
     // Listen on toggle full screen
@@ -184,11 +181,15 @@ export default {
   },
 
   mounted() {
-    /*
-    document.addEventListener("keydown", () => {
-      console.log("pressed key");
-    });
-    */
+    // Load prism for syntax highlighting
+    const css = document.createElement('link');
+    css.setAttribute('rel', "stylesheet");
+    css.setAttribute('href', "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/themes/prism.min.css");
+    document.head.append(css);
+
+    const script = document.createElement('script');
+    script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/prismjs@1.17.1/prism.min.js');
+    document.head.append(script);
   }
 };
 </script>
@@ -197,31 +198,55 @@ export default {
 .container {
   padding: 0 15%;
 }
-.flex {
-  display: flex;
+
+/* Two Column styles */
+.two-cols > div.preview,
+.two-cols > div.input {
+  float: left;
+  width: 43%;
+  margin: 0 1% 0 2%;
+  padding: 0 1%;
 }
 
-.flex > div {
-  flex: 50%;
-  margin: 0 2%;
-  padding: 0 10px;
-}
-
-.flex > div.md-preview {
+.two-cols > div.preview {
   border-style: solid;
   border-width: 1.5px;
   border-radius: 10px;
-  font-family: 'Alegreya', Alegreya, Ubuntu
+  font-family: "Alegreya", Alegreya, Ubuntu;
+  overflow-wrap: break-word;
+  text-align: justify;
 }
 
-.md-input .CodeMirror {
+.two-cols::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: absolute;
+  bottom: 200px;
+  width: 5%;
+  margin: 0;
+  padding: 0;
+  height: 0;
+  z-index: 30;
+}
+
+.sidebar input {
+  width: 100%;
+}
+
+/* Codemirror styles */
+.CodeMirror {
   height: auto;
   width: auto;
   font-size: 1.1em;
 }
 
-.md-input .CodeMirror-scroll {
-  min-height: 35em;
+.CodeMirror-scroll {
+  min-height: 29em;
 }
 
 .md-input .CodeMirror-activeline-background.CodeMirror-linebackground {
@@ -231,29 +256,6 @@ export default {
 .md-input span.CodeMirror-selectedtext {
   color: #263238;
   background-color: rgba(98, 240, 3, 0.863);
-}
-
-.full-screen {
-  position: fixed;
-  margin-top: 50px;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 10;
-}
-
-.full-screen .CodeMirror-scroll {
-  min-height: 700px;
-}
-
-.full-screen .CodeMirror {
-  width: auto;
-}
-
-.btn-full-screen {
-  background: #eee;
-  color: #444;
 }
 </style>
 
