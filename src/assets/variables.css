@@ -1,0 +1,10 @@
+
+:root {
+  --theme-dark: #444;
+  --theme-light: #eee;
+  --theme-red: rgb(104, 0, 0);
+  --btn-inactive: rgb(179, 179, 179);
+  --mono: Monaco, "Lucida Console", "Ubuntu Mono", monospace;
+  --sans-serif:"Roboto", Helvetica, "open sans", sans-serif; 
+  --serif: "Alegreya", Georgia, serif;
+}

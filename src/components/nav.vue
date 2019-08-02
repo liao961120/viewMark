@@ -37,14 +37,16 @@ a {
 nav {
   background: #444;
   padding: 14px 0 14px 0;
-  margin-bottom: 20px;
   width: 100%;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 100;
+  font-size: 0.9em;
 }
+
 .router-link-exact-active {
-  background: #eee;
-  color: #444;
+  background: var(--theme-light);
+  color: var(--theme-dark);
 }
 </style>
