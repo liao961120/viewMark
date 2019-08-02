@@ -1,11 +1,10 @@
 <template>
-  <div class="math">
-    <div class="math-input">
+  <div class="math two-cols outer">
+    <div class="input math-input">
       <codemirror v-model="mathInput" v-bind:options="cmOptions"></codemirror>
     </div>
 
-    <div class="math-preview">
-      <h3>Preview</h3>
+    <div class="preview">
       <div id="math-preview" v-html="mathRender"></div>
     </div>
   </div>
@@ -15,7 +14,8 @@
 /* eslint-disable */
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/stex/stex";
-import "codemirror/theme/base16-dark.css";
+import "codemirror/theme/material.css";
+
 
 // require active-line.js
 import "codemirror/addon/selection/active-line";
@@ -33,7 +33,7 @@ export default {
         // codemirror options
         tabSize: 4,
         mode: "stex",
-        theme: "base16-dark",
+        theme: "material",
         styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
         styleActiveLine: true,
         lineNumbers: true,
@@ -65,52 +65,10 @@ export default {
 </script>
 
 <style>
-div.math {
-  display: flex
-}
-div.math > div {
-  flex: 50%;
-}
-
-div.math-input {
-  margin: 0 20px;
-}
-.math-preview {
-  margin: 0px 0px;
-  padding: 0 0px;
-}
-.math-preview > * {
-  text-align: center;
-  margin: 0.01em;
-  font-size: 1.2em;
-  line-height: 1.8em;
-}
-.math-preview > h3 {
-  margin: 0px auto;
-  font-size: 1em;
-  text-align: center;
-}
-
-.math-input .CodeMirror {
-/*  margin: 0px 20px;  */
-/*  min-width: 300px;  */
-  height: auto;
-  width: auto;
+div#math-preview {
+  padding: 10px 10px 15px;
+  overflow-x: auto;
   font-size: 1.1em;
-  /*width: 90%;*/
-}
-
-.math-input .CodeMirror-scroll {
-  min-height: 300px;
-}
-
-.math-input .CodeMirror-activeline-background.CodeMirror-linebackground {
-  background: rgba(100, 100, 100, 0.5);
-}
-
-.math-input span.CodeMirror-selectedtext {
-  color: #263238;
-  background-color: rgba(98, 240, 3, 0.863);
 }
 </style>
 
