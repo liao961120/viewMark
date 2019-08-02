@@ -121,9 +121,10 @@ export default {
         localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
 
       // Clean up
-      this.toRegister.cursorPos = 0;
       this.toRegister.snippet = "";
       this.toRegister.name = "";
+      this.toRegister.cursorPos[0] = 0;
+      this.toRegister.cursorPos[1] = 0;
 
       // Emit event
       bus.$emit("updateSnippets", {
@@ -175,7 +176,7 @@ export default {
   computed: {},
 
   watch: {
-    'toRegister.cursorPos': function(value) {
+    'toRegister.cursorPos': function() {
       console.log('changed')
       var start = parseInt(this.toRegister.cursorPos[0]);
       var end = parseInt(this.toRegister.cursorPos[1]);
