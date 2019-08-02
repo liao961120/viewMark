@@ -1,26 +1,21 @@
 <template>
-  <div>
+  <div class="outer">
     <form>
       <h3>Register new snippet</h3>
       <ul>
         <li>
-          <input type="text" placeholder="Name" v-model="toRegister.name" />
+          <input type="text" placeholder="Name" v-model.lazy="toRegister.name" maxlength="18" />
         </li>
         <li>
           <input type="text" placeholder="Snippets" v-model="toRegister.snippet" />
         </li>
         <li>
-          Cursor Position:
-          <input
-            type="number"
-            placeholder="Cursor position"
-            step="1"
-            max="0"
-            v-model="toRegister.cursorPos"
-          />
+          Cursor (start | end) : <br>
+          <input type="number" step="1" min="0" v-model="toRegister.cursorPos[0]" class="select-start"/>
+          <input type="number" step="1" min="0" v-model="toRegister.cursorPos[1]" class="select-end"/>
         </li>
         <li>
-          Snippet Type:
+          Snippet for:
           <select v-model="toRegister.isMdSnippet" required>
             <option v-bind:value="true">Markdown</option>
             <option v-bind:value="false">Math</option>
@@ -30,6 +25,15 @@
           <button v-on:click="register">Add Snippet</button>
         </li>
       </ul>
+
+      <p>
+        <span
+          v-for="(ch, i) in word2array(toRegister.snippet)"
+          v-bind:key="ch.id"
+          v-bind:data-pos="i"
+          v-bind:class="{'selected': isSelected(i)}"
+        >{{ ch }}</span>
+      </p>
     </form>
 
     <div class="snippets-preview">
@@ -81,7 +85,7 @@ export default {
       toRegister: {
         name: "",
         snippet: "",
-        cursorPos: 0,
+        cursorPos: [0, 0],
         isMdSnippet: true
       },
       mdSnippets: [
@@ -152,10 +156,48 @@ export default {
     toMath: function(value) {
       var html = katex.renderToString(value, { throwOnError: false });
       return html;
+    },
+
+    word2array: function(str) {
+      var a = [];
+      for (let i = 0; i < str.length; i++) a.push(str.charAt(i));
+      return a;
+    },
+
+    isSelected: function(pos) {
+      var cursorPos = this.toRegister.cursorPos;
+      if (parseInt(cursorPos[0]) <= pos && pos < parseInt(cursorPos[1]))
+        return true;
+      return false;
     }
   },
 
+  computed: {},
+
+  watch: {
+    'toRegister.cursorPos': function(value) {
+      console.log('changed')
+      var start = parseInt(this.toRegister.cursorPos[0]);
+      var end = parseInt(this.toRegister.cursorPos[1]);
+      
+      if (start > this.toRegister.snippet.length)
+        this.toRegister.cursorPos[0] = this.toRegister.snippet.length;
+
+      if (end > this.toRegister.snippet.length)
+        this.toRegister.cursorPos[1] = this.toRegister.snippet.length;
+      
+      if (start > end)
+        this.toRegister.cursorPos[1] = this.toRegister.cursorPos[0];
+      
+      
+      this.toRegister.cursorPos[1] = parseInt(this.toRegister.cursorPos[1]);
+      this.toRegister.cursorPos[2] = parseInt(this.toRegister.cursorPos[2]);
+    }
+
+  },
+
   created() {
+    // Load snippets
     if (localStorage.getItem("mdSnippets"))
       this.mdSnippets = JSON.parse(localStorage.getItem("mdSnippets"));
     if (localStorage.getItem("mathSnippets"))
@@ -177,18 +219,54 @@ export default {
 form {
   margin: 10px auto;
   width: 12%;
-  min-width: 250px;
-  padding: 0 auto;
+  min-width: 218px;
+  padding: 0 0;
 }
-form > h3 {
+form > ul {
+  margin: 0;
+  padding: 0 10%;
+}
+
+form input {
+  width: 98%;
+}
+form .select-start, .select-end {
+  display: inline-block;
+  width: 38%;
+  margin: 4px 0 6px;
+  padding: 0;
+}
+form .select-start {
+  margin-left: 0;
+  margin-right: 19%;
+  padding: 0;
+}
+/* 
+input[type="number"] {
+  width: 2.75em;
+  margin: 0 0 0 10px;
+} */
+form > h3, p {
   text-align: center;
+}
+
+form > p {
+  border: black solid 1px;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.8em;
+  letter-spacing: 0;
+  font-family: var(--mono);
+  overflow-wrap: break-word;
+}
+
+span.selected {
+  background-color: rgba(133, 255, 63, 0.63);
 }
 li {
   list-style-type: none;
   margin: 10px 0;
-}
-input[type="number"] {
-  width: 2.7em;
+  font-size: 0.85em;
 }
 
 div.snippets-preview {
@@ -199,7 +277,7 @@ div > table {
   margin: 5%;
 }
 .snippet {
-  font-family: Monaco, "Courier New", Courier, monospace;
+  font-family: var(--mono);
   font-size: 0.8em;
   letter-spacing: 0.05em;
 }
