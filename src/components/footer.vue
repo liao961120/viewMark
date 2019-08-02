@@ -54,7 +54,7 @@ export default {
 
     addSyntaxHighlight: function(event) {
       const lang = prompt(
-        "Enter one programming language name for syntax highlighting.",
+        "Enter a programming language for syntax highlighting.",
         "python"
       );
       if (lang == null) return;
