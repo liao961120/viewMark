@@ -27,8 +27,14 @@ function getAllParents(ele) {
   return nodes
 }
 
+function deepCopy(obj) {
+  const copy = JSON.parse(JSON.stringify(obj));
+  return copy
+}
+
 
 var utils = {
+  deepCopy,
   getAllParents,
   getTextNodesIn,
 }
