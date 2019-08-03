@@ -65,6 +65,8 @@
         </tr>
       </table>
     </div>
+
+    <app-footer></app-footer>
   </div>
 </template>
 
@@ -76,10 +78,17 @@ let marked = require("marked");
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
+// Components
+import appFooter from "./footer-static"
+
 // Event bus
 import { bus } from "../main";
 
 export default {
+  components: {
+    'app-footer': appFooter,
+  },
+
   data() {
     return {
       toRegister: {
@@ -92,7 +101,7 @@ export default {
         {
           name: "Link",
           snippet: "[link](https://)",
-          cursorPos: 0,
+          cursorPos: [0, 0],
           isMdSnippet: true
         }
       ],
@@ -100,7 +109,7 @@ export default {
         {
           name: "Fraction",
           snippet: "\\frac{a}{b}",
-          cursorPos: -4,
+          cursorPos: [6, 7],
           isMdSnippet: false
         }
       ]
