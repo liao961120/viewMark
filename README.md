@@ -1,29 +1,16 @@
-# md-editor
+# vueMark
 
-## Project setup
-```
-npm install
-```
+## To Do
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+1. Markdown
+    - mdSave: add close button in modal
 
-### Compiles and minifies for production
-```
-npm run build
-```
+1. footer
+    - prism syntax highlight cache (localStorage)
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+1. Math
+    - local storage for codemirror input
+    
+1. Viewer
+    - Single article view
+        - page media for printing
