@@ -1,5 +1,7 @@
 <template>
   <nav>
+    <ul class="left">
+    </ul>
     <ul>
       <li>
         <router-link to="/">Markdown</router-link>
@@ -9,6 +11,11 @@
       </li>
       <li>
         <router-link to="/snippets">Snippets</router-link>
+      </li>
+    </ul>
+    <ul class="right">
+      <li>
+        <router-link to="/viewer">Viewer</router-link>
       </li>
     </ul>
   </nav>
@@ -23,6 +30,7 @@ ul {
   list-style-type: none;
   text-align: center;
   margin: 0;
+  padding: 0;
 }
 li {
   display: inline-block;
@@ -43,6 +51,9 @@ nav {
   left: 0;
   z-index: 100;
   font-size: 0.9em;
+  
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
 }
 
 .router-link-exact-active {
