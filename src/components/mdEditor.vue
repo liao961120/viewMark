@@ -8,7 +8,7 @@
           v-bind:options="cmOptions"
           v-on:update="onCmUpdate"
           v-on:blur="onCmDefocus"
-          v-on:ready="renderMath"
+          v-on:ready="onCmReady"
         ></codemirror>
       </div>
 
@@ -17,15 +17,7 @@
       </div>
     </div>
 
-    <app-footer v-bind:isMdSnippet="true" v-bind:isFullScreen="isFullScreen">
-      <li slot-scope="props" slot="custom-md-btn1">
-        <a href="#fullscreen" v-on:click="props.toggleFullScreen"></a>
-      </li>
-
-      <li slot="custom-md-btn2">
-        <a href="#">slot 2</a>
-      </li>
-    </app-footer>
+    <app-footer v-bind:isMdSnippet="true" v-bind:isMathSnippet="false" v-bind:isFullScreen="isFullScreen"></app-footer>
   </div>
 </template>
 
@@ -41,6 +33,8 @@ import "codemirror/addon/selection/mark-selection";
 
 // custom functions
 import utils from "./utils";
+import prism from "./prism";
+import "../assets/prism.css";
 
 // katex
 import katex from "katex";
@@ -80,16 +74,12 @@ export default {
         lineWrapping: true
       },
       cmObject: {},
-      cmObject2: {},
-      isFullScreen: false,
+      isFullScreen: false
     };
   },
   methods: {
     toggleFullScreen() {
       this.isFullScreen = !this.isFullScreen;
-    },
-    test() {
-      this.mdInput = "new text";
     },
     renderMath() {
       // Render Math in Preview
@@ -102,10 +92,13 @@ export default {
         ]
       });
     },
-    onCmUpdate(cm) {
+    onCmReady(cm) {
       // Expose codemirror object to data
       this.cmObject = cm;
-
+      
+      this.renderMath();
+    },
+    onCmUpdate(cm) {
       // Save text to localStorage
       localStorage.setItem("md-input", this.mdInput);
 
@@ -157,14 +150,13 @@ export default {
       // Insert snippet
       this.mdInput += data.content;
 
-      // Set cursor position
+      // Get cursor position
       var linenum = this.cmObject.getCursor().line + 0;
       var ch = this.cmObject.getCursor().ch + 0;
       this.cmObject.focus();
 
       // Move to cursor position
       setTimeout(() => {
-        console.log(this.cmObject, linenum, ch);
         let ch_start = ch + parseInt(data.cursorPos[0]);
         let ch_end = ch + parseInt(data.cursorPos[1]);
         this.cmObject.setSelection(
@@ -180,17 +172,7 @@ export default {
     });
   },
 
-  mounted() {
-    // Load prism for syntax highlighting
-    const css = document.createElement('link');
-    css.setAttribute('rel', "stylesheet");
-    css.setAttribute('href', "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/themes/prism.min.css");
-    document.head.append(css);
-
-    const script = document.createElement('script');
-    script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/prismjs@1.17.1/prism.min.js');
-    document.head.append(script);
-  }
+  mounted() {}
 };
 </script>
 
@@ -249,11 +231,11 @@ export default {
   min-height: 29em;
 }
 
-.md-input .CodeMirror-activeline-background.CodeMirror-linebackground {
+.CodeMirror-activeline-background.CodeMirror-linebackground {
   background: rgba(100, 100, 100, 0.5);
 }
 
-.md-input span.CodeMirror-selectedtext {
+span.CodeMirror-selectedtext {
   color: #263238;
   background-color: rgba(98, 240, 3, 0.863);
 }
