@@ -2,9 +2,13 @@
 :root {
   --theme-dark: #444;
   --theme-light: #eee;
-  --theme-red: rgb(104, 0, 0);
+  --message: rgb(150, 150, 150);
+  --button-on: rgb(0, 192, 0);
   --btn-inactive: rgb(179, 179, 179);
   --mono: Monaco, "Lucida Console", "Ubuntu Mono", monospace;
   --sans-serif:"Roboto", Helvetica, "open sans", sans-serif; 
   --serif: "Alegreya", Georgia, serif;
+  --article-box: rgb(219, 219, 219);
+  --article-box-hover: rgb(230, 228, 195);
+
 }

@@ -27,6 +27,7 @@ export default {
 
 <style>
 @import './assets/variables.css';
+/* @import './assets/modal.css'; */
 
 html {
   height: 100%;
@@ -59,8 +60,16 @@ h6 {
   font-family: "Alegreya", Georgia, serif;
 }
 
+.message {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  font-size: 0.7em;
+  color: var(--message);
+}
+
 .CodeMirror {
   border: 1px solid #eee;
+  border-radius: 10px;
   overflow-x: hidden;
   height: auto;
   width: 70%;
