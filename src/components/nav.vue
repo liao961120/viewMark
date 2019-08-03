@@ -1,6 +1,9 @@
 <template>
   <nav>
     <ul class="left">
+      <li>
+        <router-link to="/viewer">Viewer</router-link>
+      </li>
     </ul>
     <ul>
       <li>
@@ -13,11 +16,7 @@
         <router-link to="/snippets">Snippets</router-link>
       </li>
     </ul>
-    <ul class="right">
-      <li>
-        <router-link to="/viewer">Viewer</router-link>
-      </li>
-    </ul>
+    <ul class="right"></ul>
   </nav>
 </template>
 
@@ -51,7 +50,7 @@ nav {
   left: 0;
   z-index: 100;
   font-size: 0.9em;
-  
+
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
 }
