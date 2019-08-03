@@ -1,20 +1,29 @@
 <template>
   <footer>
     <ul class="left">
-      <li v-if="this.toggleFullScreen">
-        <a href="#" v-on:click="toggleFullScreen" class="preview left">Preview</a>
-      </li>
+      <template v-if="isMdSnippet">
+        <li>
+          <a href="#" v-on:click="toggleFullScreen" class="preview left">Preview</a>
+        </li>
+        <li>
+          <a href="#" v-on:click="toggleModal" class="left toggle-modal">Save/Load</a>
+        </li>
+
+        <template v-if="isMathSnippet"></template>
+      </template>
     </ul>
     <ul>
-      <slot name="custom-math-btn"></slot>
       <li v-for="snippet in snippets" v-bind:key="snippet.id">
         <a href="#" v-on:click="insertSnippet(snippet)">{{ snippet.name }}</a>
       </li>
     </ul>
     <ul class="right">
-      <li v-if="isMdSnippet">
-        <a href="#" v-on:click="addSyntaxHighlight" class="prism right">SyntaxHighlight</a>
-      </li>
+      <template v-if="isMdSnippet">
+        <li>
+          <a href="#" v-on:click="addSyntaxHighlight" class="prism right">Highlight Code</a>
+        </li>
+      </template>
+      <template v-if="isMathSnippet"></template>
     </ul>
   </footer>
 </template>
@@ -25,6 +34,9 @@ import { bus } from "../main";
 export default {
   props: {
     isMdSnippet: {
+      type: Boolean
+    },
+    isMathSnippet: {
       type: Boolean
     },
     isFullScreen: {
@@ -43,13 +55,22 @@ export default {
         cursorPos: snippet.cursorPos
       });
     },
+
+    ///////////////// Methods for math editor ////////////////////////////
+
+    ///////////////// Methods for md editor //////////////////////////////
     toggleFullScreen: function(event) {
       bus.$emit("toggleFullScreen", {});
       setTimeout(() => {
-        var ele = event.target;
-        if (this.isFullScreen) ele.className = "";
-        else ele.className = "btn-full-screen";
+        event.target.classList.toggle("btn-full-screen");
       }, 100);
+    },
+
+    toggleModal: function(event) {
+      var modal = document.querySelector(".modal");
+      modal.classList.toggle("show-modal");
+
+      document.querySelector("a.toggle-modal").classList.toggle("btn-active");
     },
 
     addSyntaxHighlight: function(event) {
@@ -77,7 +98,9 @@ export default {
     bus.$on("updateSnippets", data => {
       this.snippets = data[item];
     });
-  }
+  },
+
+  mounted() {}
 };
 </script>
 
@@ -85,8 +108,8 @@ export default {
 ul {
   list-style-type: none;
   text-align: center;
-  margin: 0;
-  padding: 0 5px;
+  margin: 1.5px 0;
+  padding: 0;
 }
 li {
   display: inline-block;
@@ -106,39 +129,54 @@ a:hover {
   color: var(--theme-dark);
 }
 
-a.preview:hover,
+a.left:hover,
+.btn-active,
 .btn-full-screen,
 .btn-full-screen:hover {
   background: var(--theme-light);
-  color: var(--theme-red);
-  font-weight: bold;
+  color: var(--button-on);
 }
 
 footer {
-  float: center;
   background: var(--theme-dark);
-  padding: 14px 0 14px 0;
+  padding: 2px 3px 5px;
   margin-bottom: 0px;
   width: 100%;
-  /* position: sticky; */
+  min-height: 5%;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: 100;
 
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr; 
+  grid-template-columns: 1fr 4fr 1fr;
 }
 
-.left, .right {
+.left,
+.right {
   align-self: end;
+  margin: 1.5px 3px;
 }
+
+.left li,
+.right li {
+  margin: 4px;
+  padding: 2px;
+}
+
+.left a,
+.right a {
+  font-size: 0.8em;
+  font-weight: bold;
+  margin: 0px;
+  padding: 5px;
+}
+
 .left {
   justify-self: start;
 }
 .right {
   justify-self: end;
 }
-
 </style>
 
