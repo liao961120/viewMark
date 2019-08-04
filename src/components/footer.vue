@@ -50,10 +50,7 @@ export default {
   },
   methods: {
     insertSnippet: function(snippet) {
-      bus.$emit("insertSnippet", {
-        content: snippet.snippet,
-        cursorPos: snippet.cursorPos
-      });
+      bus.$emit("insertSnippet", snippet);
     },
 
     ///////////////// Methods for math editor ////////////////////////////

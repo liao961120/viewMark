@@ -85,7 +85,10 @@ export default {
 
   created() {
     bus.$on("insertSnippet", data => {
-      this.mathInput += data.content;
+      // Check md or math snippet
+      if (data.isMdSnippet) return;
+
+      this.mathInput += data.snippet;
       // Get cursor position
       var linenum = this.cmObject.getCursor().line + 0;
       var ch = this.cmObject.getCursor().ch + 0;
@@ -100,8 +103,7 @@ export default {
           { line: linenum, ch: ch_end }
         );
       }, 100);
-
-    });  // end $on(insertSnippet)
+    }); // end $on(insertSnippet)
   }
 };
 </script>

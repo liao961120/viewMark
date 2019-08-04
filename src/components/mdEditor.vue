@@ -144,10 +144,13 @@ export default {
       setTimeout(() => bus.$emit("mdInputSaved", true), 100);
     });
 
-    // Listen to snippet insertion
+    // Listen on snippet insertion
     bus.$on("insertSnippet", data => {
+      // Check md or math snippet
+      if (!data.isMdSnippet) return
+      
       // Insert snippet
-      this.mdInput += data.content;
+      this.mdInput += data.snippet;
 
       // Get cursor position
       var linenum = this.cmObject.getCursor().line + 0;
