@@ -128,7 +128,6 @@ export default {
       var article = utils.deepCopy(this.newArticle);
       
       if (updateIdx != null) {
-        console.log(updateIdx, article)
         this.articles[updateIdx] = article;
       } 
       else 
