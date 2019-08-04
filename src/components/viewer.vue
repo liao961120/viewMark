@@ -32,7 +32,7 @@
           class="article"
         >
           <h3>
-            <a href="#" v-on:click="toArticle(idx)">{{ article.title | trimString(25) }}</a>
+            <a v-on:click="toArticle(idx)">{{ article.title | trimString(25) }}</a>
           </h3>
           <span class="date">{{ article.date | toDate }}</span>
           <ul class="tags">
@@ -55,6 +55,8 @@
         ></single-article>
       </transition-group>
     </div>
+  
+  <footer v-show="!viewArticle.show"></footer>
   </div>
 </template>
 
@@ -184,8 +186,7 @@ export default {
         return true;
       });
     }
-  },//end computed()
-
+  }, //end computed()
 
   created() {
     if (localStorage.getItem("md-articles"))
@@ -197,12 +198,11 @@ export default {
     });
 
     // Navigate back to here from single article
-    bus.$on('toReader', () => {
+    bus.$on("toReader", () => {
       this.viewArticle.show = false;
       this.viewArticle.idx = null;
     });
-
-  }//end created()
+  } //end created()
 };
 </script>
 

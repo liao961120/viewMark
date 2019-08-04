@@ -156,53 +156,5 @@ li.tag:hover {
   margin: 20px 0;
   padding: 10px 0;
 }
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--theme-dark);
-  padding: 0;
-  min-height: 20px;
-  z-index: 100;
-  display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
-}
-footer ul {
-  padding: 0;
-  margin: 0;
-}
-footer li {
-  display: inline-block;
-  margin: 0 3px;
-  padding: 4px 0px 8px;
-}
-footer a {
-  font-size: 0.6em;
-  text-decoration: none;
-  padding: 5px 8px;
-  margin: 0 7px;
-  border-radius: 10px;
-  background: var(--btn-inactive);
-  color: var(--theme-dark);
-}
-footer a:hover {
-  background: var(--theme-light);
-  color: var(--theme-dark);
-}
-
-footer .back::before {
-  content: "\00ab ";
-  display: inline-block;
-  width: 0;
-  opacity: 0;
-  transition: 0.4s;
-}
-
-footer .back:hover::before {
-  opacity: 1;
-  width: 0.8em;
-}
 </style>
 
