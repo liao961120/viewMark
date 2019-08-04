@@ -4,7 +4,7 @@
       <codemirror
         v-model="mathInput"
         v-bind:options="cmOptions"
-        v-on:undate="onCmUpdate"
+        v-on:update="onCmUpdate"
         v-on:ready="onCmReady"
       ></codemirror>
     </div>
@@ -66,7 +66,9 @@ export default {
       // Expose cm object to data
       this.cmObject = cm;
     },
-    onCmUpdate: function(cm) {}
+    onCmUpdate: function(cm) {
+      localStorage.setItem("math-input", this.mathInput);
+    }
   },
   computed: {
     mathRender: function() {
@@ -78,12 +80,14 @@ export default {
       } catch (e) {
         var html = "error";
       }
-
       return html;
     }
   },
 
   created() {
+    if (localStorage.getItem("math-input"))
+      this.mathInput = localStorage.getItem("math-input");
+
     bus.$on("insertSnippet", data => {
       // Check md or math snippet
       if (data.isMdSnippet) return;
