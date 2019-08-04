@@ -51,6 +51,7 @@
         </ul>
       </div>
       <br />
+      <button class="close-button">Close</button>
     </div>
   </div>
 </template>
@@ -64,6 +65,7 @@ ToDo:
 // Event bus
 import { bus } from "../main";
 import utils from "./utils";
+
 
 export default {
   props: {
@@ -126,12 +128,10 @@ export default {
 
       // Add new article
       var article = utils.deepCopy(this.newArticle);
-      
+
       if (updateIdx != null) {
         this.articles[updateIdx] = article;
-      } 
-      else 
-        this.articles.unshift(article);
+      } else this.articles.unshift(article);
 
       localStorage.setItem("md-articles", JSON.stringify(this.articles));
 
@@ -166,6 +166,15 @@ export default {
         localStorage.removeItem("md-articles");
       }
     }
+
+    function toggleModal() {
+      var modal = document.querySelector(".modal");
+      modal.classList.toggle("show-modal");
+      document.querySelector("a.toggle-modal").classList.toggle("btn-active");
+    };
+
+    document.querySelector('.close-button').onclick = toggleModal;
+
   },
   created() {
     // listen to 'mdInputSaved'
