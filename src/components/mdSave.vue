@@ -171,7 +171,7 @@ export default {
       var modal = document.querySelector(".modal");
       modal.classList.toggle("show-modal");
       document.querySelector("a.toggle-modal").classList.toggle("btn-active");
-    };
+    }
 
     document.querySelector('.close-button').onclick = toggleModal;
 

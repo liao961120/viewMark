@@ -32,7 +32,6 @@
 import prism from "./prism";
 import "../assets/prism.css";
 // katex
-import katex from "katex";
 import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
@@ -88,6 +87,7 @@ export default {
   created() {},
 
   mounted() {
+    // Render math
     var target = document.querySelector(".md-content");
     if (target) {
       renderMathInElement(target, {
@@ -99,6 +99,9 @@ export default {
         ]
       });
     }
+    
+    // Syntax highlight
+    Prism.highlightAll();
   }
 };
 </script>
