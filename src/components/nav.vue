@@ -2,7 +2,7 @@
   <nav>
     <ul class="left">
       <li>
-        <router-link to="/viewer">Viewer</router-link>
+        <router-link to="/reader">Reader</router-link>
       </li>
     </ul>
     <ul>

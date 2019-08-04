@@ -1,49 +1,60 @@
 <template>
   <div class="outer">
-    <div class="articles">
-      <div class="filter">
-        <h2>Search:</h2>
-        <ul>
-          <li>
-            <input type="text" placeholder="title" v-model="filter.title" />
-          </li>
-          <li>
-            <input
-              type="text"
-              placeholder="tags"
-              v-model="filter.tags"
-              v-on:focus="filter.focusTags = true"
-              v-on:blur="filter.focusTags = false"
-            />
-            <span v-if="filter.focusTags" class="message">1 space between each tag</span>
-          </li>
-          <li>
-            <input type="text" placeholder="content" v-model="filter.content" />
-          </li>
-        </ul>
+    <!-- Multi Articles view -->
+    <transition name="fade2">
+      <div class="articles" v-show="!viewArticle.show">
+        <div class="filter">
+          <h2>Search:</h2>
+          <ul>
+            <li>
+              <input type="text" placeholder="title" v-model="filter.title" />
+            </li>
+            <li>
+              <input
+                type="text"
+                placeholder="tags"
+                v-model="filter.tags"
+                v-on:focus="filter.focusTags = true"
+                v-on:blur="filter.focusTags = false"
+              />
+              <span v-if="filter.focusTags" class="message">1 space between each tag</span>
+            </li>
+            <li>
+              <input type="text" placeholder="content" v-model="filter.content" />
+            </li>
+          </ul>
+        </div>
+
+        <div
+          v-for="(article, idx) in filterGeneric"
+          v-bind:key="article.id"
+          v-bind:value="idx"
+          class="article"
+        >
+          <h3>
+            <a href="#" v-on:click="toArticle(idx)">{{ article.title | trimString(25) }}</a>
+          </h3>
+          <span class="date">{{ article.date | toDate }}</span>
+          <ul class="tags">
+            <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
+          </ul>
+          <div class="content">{{ article.content | trimString(150) }}</div>
+          <button v-on:click="deleteArticle(idx)">Delete</button>
+        </div>
       </div>
-      <div
-        v-for="(article, idx) in filterGeneric"
-        v-bind:key="article.id"
-        v-bind:value="idx"
-        class="article"
-      >
-        <h3>
-          <a href="#" v-on:click="toArticle(idx)">{{ article.title | trimString(22) }}</a>
-        </h3>
-        <span class="date">{{ article.date | toDate }}</span>
-        <ul class="tags">
-          <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
-        </ul>
-        <div class="content">{{ article.content | trimString(100) }}</div>
-        <button v-on:click="deleteArticle(idx)">Delete</button>
-      </div>
+    </transition>
+
+    <!-- Single Article view -->
+    <div v-if="viewArticle.idx != null">
+      <transition-group name="fade" tag="div">
+        <single-article
+          v-show="viewArticle.show"
+          v-bind:article="articles[viewArticle.idx]"
+          v-bind:key="'article'"
+          v-bind:viewArticle="viewArticle"
+        ></single-article>
+      </transition-group>
     </div>
-    <single-article
-      v-if="viewArticle.idx != null"
-      v-show="viewArticle.show"
-      v-bind:article="articles[viewArticle.idx]"
-    ></single-article>
   </div>
 </template>
 
@@ -52,6 +63,7 @@ import { bus } from "../main";
 
 // Components
 import singleArticle from "./singleArticle";
+import { setTimeout } from "timers";
 
 export default {
   components: {
@@ -89,8 +101,13 @@ export default {
 
   methods: {
     toArticle: function(idx) {
-      this.viewArticle.idx = idx;
-      this.viewArticle.show = true;
+      this.viewArticle.show = false;
+      this.viewArticle.idx = null;
+
+      setTimeout(() => {
+        this.viewArticle.idx = idx;
+        this.viewArticle.show = true;
+      }, 100);
     },
 
     deleteArticle: function(idx) {}
@@ -137,7 +154,6 @@ export default {
 
     filterTagsArticles: function() {
       var searchTags = this.filter.tags.trim().split(" ");
-
       return this.articles.filter(article => {
         // Retrieve tags of an article
         var articleTags = [];
@@ -168,7 +184,9 @@ export default {
         return true;
       });
     }
-  },
+  },//end computed()
+
+
   created() {
     if (localStorage.getItem("md-articles"))
       this.articles = JSON.parse(localStorage.getItem("md-articles"));
@@ -177,7 +195,14 @@ export default {
     bus.$on("mdInputSaved", () => {
       this.articles = JSON.parse(localStorage.getItem("md-articles"));
     });
-  }
+
+    // Navigate back to here from single article
+    bus.$on('toReader', () => {
+      this.viewArticle.show = false;
+      this.viewArticle.idx = null;
+    });
+
+  }//end created()
 };
 </script>
 
@@ -206,9 +231,10 @@ ul {
 
 .article {
   display: inline-block;
-  width: 29%;
+  min-width: 250px;
+  width: 21.5%;
   padding: 1%;
-  margin: 0.8%;
+  margin: 0.7%;
   border-radius: 3%;
   background: var(--article-box);
   position: relative;
@@ -231,7 +257,6 @@ ul {
   right: 0;
   top: 0;
   padding: 6px;
-
 }
 
 .tags {
@@ -255,7 +280,7 @@ ul {
   font-size: 0.7em;
   font-family: var(--serif);
   overflow-wrap: break-word;
-  height: 5em;
+  height: 7em;
   padding: 0 0 5px;
 }
 </style>

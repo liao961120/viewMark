@@ -8,5 +8,5 @@ export default [
     {path: '/', component: mdEditor},
     {path: '/math', component: mathEditor},
     {path: '/snippets', component: registerSnippets},
-    {path: '/viewer', component: articleViewer},
+    {path: '/reader', component: articleViewer},
 ]
