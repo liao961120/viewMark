@@ -53,9 +53,9 @@ export default {
       bus.$emit("insertSnippet", snippet);
     },
 
-    ///////////////// Methods for math editor ////////////////////////////
+    ////////////// Methods for math editor //////////////////
 
-    ///////////////// Methods for md editor //////////////////////////////
+    ////////////// Methods for md editor /////////////////
     toggleFullScreen: function(event) {
       bus.$emit("toggleFullScreen", {});
       setTimeout(() => {
@@ -66,7 +66,6 @@ export default {
     toggleModal: function(event) {
       var modal = document.querySelector(".modal");
       modal.classList.toggle("show-modal");
-
       document.querySelector("a.toggle-modal").classList.toggle("btn-active");
     },
 
