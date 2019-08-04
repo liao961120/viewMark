@@ -126,8 +126,13 @@ export default {
 
       // Add new article
       var article = utils.deepCopy(this.newArticle);
-      if (updateIdx) this.articles[updateIdx] = article;
-      else this.articles.push(article);
+      
+      if (updateIdx != null) {
+        console.log(updateIdx, article)
+        this.articles[updateIdx] = article;
+      } 
+      else 
+        this.articles.unshift(article);
 
       localStorage.setItem("md-articles", JSON.stringify(this.articles));
 
