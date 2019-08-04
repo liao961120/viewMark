@@ -97,24 +97,11 @@ export default {
         cursorPos: [0, 0],
         isMdSnippet: true
       },
-      mdSnippets: [
-        {
-          name: "Link",
-          snippet: "[link](https://)",
-          cursorPos: [0, 0],
-          isMdSnippet: true
-        }
-      ],
-      mathSnippets: [
-        {
-          name: "Fraction",
-          snippet: "\\frac{a}{b}",
-          cursorPos: [6, 7],
-          isMdSnippet: false
-        }
-      ]
+      mdSnippets: [],
+      mathSnippets: [],
     };
-  },
+  }, //end data
+
   methods: {
     register: function() {
       // Update data
@@ -185,8 +172,10 @@ export default {
   computed: {},
 
   watch: {
+    'toRegister.snippet': function() {
+      this.toRegister.cursorPos[1] = this.toRegister.snippet.length;
+    },
     'toRegister.cursorPos': function() {
-      console.log('changed')
       var start = parseInt(this.toRegister.cursorPos[0]);
       var end = parseInt(this.toRegister.cursorPos[1]);
       
