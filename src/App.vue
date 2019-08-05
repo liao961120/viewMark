@@ -33,7 +33,7 @@ body {
 
 a {
   cursor: pointer;
-  color: #002EFE;
+  color: #002efe;
   text-decoration: underline;
 }
 a:hover {
@@ -139,26 +139,6 @@ h6 {
   color: var(--message);
 }
 
-.CodeMirror {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  overflow-x: hidden;
-  height: auto;
-  width: 70%;
-}
-
-.CodeMirror-scroll {
-  min-height: 500px;
-}
-
-.CodeMirror-activeline-background.CodeMirror-linebackground {
-  background: rgba(100, 100, 100, 0.5);
-}
-
-span.CodeMirror-selectedtext {
-  color: #263238;
-  background-color: rgba(98, 240, 3, 0.863);
-}
 
 /* Scroll bars */
 /* width */
