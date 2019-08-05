@@ -3,7 +3,7 @@
     <ul class="left">
       <template v-if="isMdSnippet">
         <li>
-          <a v-on:click="toggleFullScreen" class="preview left">Preview</a>
+          <a v-on:click="toggleFullScreen" class="preview left btn-full-screen">Preview</a>
         </li>
         <li>
           <a v-on:click="toggleModal" class="left toggle-modal">Save/Load</a>
@@ -39,13 +39,14 @@ export default {
     isMathSnippet: {
       type: Boolean
     },
-    isFullScreen: {
+    isOneColumn: {
       type: Boolean
     }
   },
   data() {
     return {
-      snippets: []
+      snippets: [],
+      mdMode: ["view", "edit", "edit-view"]
     };
   },
   methods: {
@@ -57,10 +58,15 @@ export default {
 
     ////////////// Methods for md editor /////////////////
     toggleFullScreen: function(event) {
-      bus.$emit("toggleFullScreen", {});
-      setTimeout(() => {
-        event.target.classList.toggle("btn-full-screen");
-      }, 100);
+      bus.$emit("toggleFullScreen", this.mdMode[0]);
+
+      if (this.mdMode[0] == "edit" || this.mdMode[0] == "edit-view") {
+        setTimeout(() => {
+          event.target.classList.toggle("btn-full-screen");
+        }, 100);
+      }
+
+      this.mdMode.push(this.mdMode.shift());
     },
 
     toggleModal: function(event) {

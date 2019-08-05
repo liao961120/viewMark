@@ -1,7 +1,9 @@
 <template>
   <div class="outer">
     <md-save v-bind:mdInput="mdInput"></md-save>
-    <div v-bind:class="{'container': isFullScreen, 'two-cols': !isFullScreen}">
+    <div
+      v-bind:class="{'container': isOneColumn, 'two-cols': !isOneColumn && !isFullView, 'full-view': isFullView}"
+    >
       <div class="input md-input">
         <codemirror
           v-model="mdInput"
@@ -12,12 +14,16 @@
         ></codemirror>
       </div>
 
-      <div class="preview md-preview" v-show="!isFullScreen">
+      <div class="preview md-preview" v-show="!isOneColumn">
         <div v-html="mdRender"></div>
       </div>
     </div>
 
-    <app-footer v-bind:isMdSnippet="true" v-bind:isMathSnippet="false" v-bind:isFullScreen="isFullScreen"></app-footer>
+    <app-footer
+      v-bind:isMdSnippet="true"
+      v-bind:isMathSnippet="false"
+      v-bind:isOneColumn="isOneColumn"
+    ></app-footer>
   </div>
 </template>
 
@@ -60,7 +66,7 @@ export default {
   data() {
     return {
       mdInput:
-        "The pdf of the normal distribution is \n\n$$\n\\frac{1}{\\sqrt{2 \\pi} \\sigma} e ^ {- \\frac{(x - \\mu)^2}{2 \\sigma ^2}}\n$$",
+        "The *p.d.f.* of the normal distribution is \n\n$$\n\\frac{1}{\\sqrt{2 \\pi} \\sigma} e ^ {- \\frac{(x - \\mu)^2}{2 \\sigma ^2}}\n$$",
       mdInputSaved: false,
       cmOptions: {
         // codemirror options
@@ -73,12 +79,13 @@ export default {
         lineWrapping: true
       },
       cmObject: {},
-      isFullScreen: false
+      isOneColumn: false,
+      isFullView: false
     };
   },
   methods: {
     toggleFullScreen() {
-      this.isFullScreen = !this.isFullScreen;
+      this.isOneColumn = !this.isOneColumn;
     },
     renderMath() {
       // Render Math in Preview
@@ -94,7 +101,7 @@ export default {
     onCmReady(cm) {
       // Expose codemirror object to data
       this.cmObject = cm;
-      
+
       this.renderMath();
     },
     onCmUpdate(cm) {
@@ -147,8 +154,8 @@ export default {
     // Listen on snippet insertion
     bus.$on("insertSnippet", data => {
       // Check md or math snippet
-      if (!data.isMdSnippet) return
-      
+      if (!data.isMdSnippet) return;
+
       // Insert snippet
       this.mdInput += data.snippet;
 
@@ -170,7 +177,29 @@ export default {
 
     // Listen on toggle full screen
     bus.$on("toggleFullScreen", data => {
-      this.isFullScreen = !this.isFullScreen;
+      // one column edit -> two columns -> one column view
+
+      // one column edit -> two columns
+      if (data == "edit-view") {
+        this.isFullView = false;
+        this.isOneColumn = false;
+        return;
+      }
+      // two columns -> one column view
+      if (data == "view") {
+        this.isOneColumn = false;
+        this.isFullView = true;
+        return;
+      }
+      // one column view -> one column edit
+      if (data == "edit") {
+        this.isFullView = false;
+        this.isOneColumn = true;
+        return;
+      }
+
+      console.log(data);
+      console.log("Bug found in toggleFullScreen, mdEditor line194");
     });
   },
 
@@ -183,6 +212,21 @@ export default {
   padding: 0 15%;
 }
 
+/* Full Preview styles */
+.full-view > div.input {
+  display: none;
+}
+.full-view > div.preview,
+.full-view > div.md-preview {
+  width: 80%;
+  padding: 10px auto;
+  margin: 10px auto;
+  font-family: var(--serif);
+  font-size: 1.1em;
+  overflow-wrap: break-word;
+  text-align: justify;
+}
+
 /* Two Column styles */
 .two-cols > div.preview,
 .two-cols > div.input {
@@ -191,57 +235,37 @@ export default {
   margin: 0 1% 0 2%;
   padding: 0 1%;
 }
-
 .two-cols > div.preview {
   border-style: solid;
   border-width: 1.5px;
   border-radius: 10px;
-  font-family: "Alegreya", Alegreya, Ubuntu;
+  font-family: var(--serif);
+  font-size: 0.9em;
   overflow-wrap: break-word;
   text-align: justify;
 }
-
 .two-cols::after {
   content: "";
   display: block;
   clear: both;
 }
 
-/* Sidebar styles */
-.sidebar {
-  position: absolute;
-  bottom: 200px;
-  width: 5%;
-  margin: 0;
-  padding: 0;
-  height: 0;
-  z-index: 30;
-}
-
-.sidebar input {
-  width: 100%;
-}
-
 /* Codemirror styles */
 .CodeMirror {
+  border: 1px solid #eee;
+  border-radius: 10px;
   height: auto;
   width: auto;
   font-size: 1.1em;
 }
-
 .CodeMirror-scroll {
   min-height: 29em;
 }
-
 .CodeMirror-activeline-background.CodeMirror-linebackground {
   background: rgba(100, 100, 100, 0.5);
 }
-
 span.CodeMirror-selectedtext {
   color: #263238;
   background-color: rgba(98, 240, 3, 0.863);
 }
-</style>
-
-<style scoped>
 </style>
