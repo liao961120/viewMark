@@ -8,6 +8,7 @@ cache:
   directories:
     - node_modules
 script:
+  - [[ -d dist ]] && rm -r dist
   - npm run build
   - mv src/assets/prism-lang-min dist/
 
