@@ -9,7 +9,8 @@ cache:
   directories:
     - node_modules
 script:
-  - bash build.sh
+  - npm run build
+  - mv dist/ docs/
   - mv src/assets/prism-lang-min docs/
 
 deploy:
