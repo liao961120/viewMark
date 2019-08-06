@@ -1,14 +1,16 @@
 <template>
   <div class="modal">
     <div class="modal-content">
-      <div class="update">
-        <h3>Update article</h3>
+      <div class="update" v-show="cache.title != ''">
+        <h3>Current article</h3>
         <ul>
-          <li>Title: {{ cache.title }}</li>
-          <li>Tags: {{ cache.tags }}</li>
+          <li>{{ cache.title }}</li>
+          <li><span v-for="tag in cache.tags" :key="tag.id" class="tag">
+              {{ tag }}
+          </span></li>
 
           <li class="submit">
-            <span v-show="articleUpdated" class="message">Updated!</span>
+            <span v-show="articleUpdated" class="message">Content Updated!</span>
             <button @click="updateArticle">Update</button>
           </li>
         </ul>
@@ -29,13 +31,13 @@
           <li>
             <input type="text" placeholder="Tag" v-model="tag" />
             <button v-on:click="addTag">Add</button>
-            <ul class="inline-list preview article-title">
-              <li v-for="tag in newArticle.tags" v-bind:key="tag.id">{{ tag }}&nbsp;</li>
-            </ul>
+            <div class="inline-list preview tags">
+              <span class="tag" v-for="tag in newArticle.tags" v-bind:key="tag.id">{{ tag }}</span>
+            </div>
           </li>
           <li class="submit">
             <span v-show="mdInputSaved" class="message">Article saved!</span>
-            <button v-on:click="saveArticle" v-bind:disabled="mdInputSaved">Save</button>
+            <button v-on:click="saveArticle" v-bind:disabled="mdInputSaved">Create</button>
           </li>
         </ul>
       </div>
@@ -144,7 +146,7 @@ export default {
       this.articleUpdated = true;
       setTimeout(() => {
         this.articleUpdated = false;
-      }, 3000);
+      }, 850);
     },
     saveArticle: function() {
       // validity check
@@ -232,26 +234,24 @@ export default {
 </script>
 
 <style scoped>
-.inline-list,
-.inline-list li {
-  display: inline;
-  font-size: 0.85em;
-  font-style: italic;
-}
-
 select {
   max-width: 35%;
 }
-
+.message {
+  display: inline-block;
+  color: rgb(107, 107, 107);
+  background: rgb(231, 231, 231);
+  border-radius: 4.5px;
+  padding: 1px 3px;
+  font-size: 0.7em;
+}
 .preview {
-  /* float: right; */
   display: inline-block;
   text-align: right;
   padding: 0 1em;
   margin: 0 auto;
   max-width: 15em;
-  max-height: 1.2em;
-  overflow: hidden;
+  max-height: 1.5em;
   font-size: 0.8em;
 }
 
@@ -269,9 +269,8 @@ select {
 }
 .submit > button {
   display: inline-block;
-  width: 12%;
-  margin: 15px 0 15px 85%;
-  padding: 0.8%;
+  width: 10.5%;
+  margin: 15px 0 15px 89%;
 }
 .submit > span {
   position: absolute;
@@ -279,23 +278,38 @@ select {
   left: 0%;
 }
 
-.modal-content {
-  z-index: 200;
-}
 .modal-content > div {
   padding: 1.5px 8px;
   margin: 5px 0 15px;
   border-radius: 5px;
 }
 .modal-content > div:nth-child(1) {
-  background: #8785ffa2;
+  background: #8785ff78;
+}
+.modal-content > div:nth-child(1) li:nth-child(1) {
+  font-family: var(--serif);
 }
 .modal-content > div:nth-child(2) {
-  background: #fdff85ea;
+  background: #fdff85;
 }
 .modal-content > div:nth-child(3) {
-  background: #ff8785a2;
+  background: #ff878578;
   margin-bottom: 0;
+}
+.modal-content .tag {
+  font-family: var(--mono);
+  font-size: 0.65em;
+  display: inline-block;
+  padding: 1px 3px;
+  margin: 0 2px;
+  border-radius: 5px;
+  background: #6461ff;
+  color: white;
+}
+.modal-content .inline-list .tag {
+  font-size: 0.75em;
+  background: #8e9100;
+  margin-top: 0.7em;
 }
 
 .modal-content ul {
@@ -329,7 +343,7 @@ select {
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 0.6rem 1rem;
-  width: 24rem;
+  width: 28rem;
   border-radius: 0.5rem;
 }
 
