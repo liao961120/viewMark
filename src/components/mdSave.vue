@@ -1,8 +1,20 @@
 <template>
   <div class="modal">
     <div class="modal-content">
+      <div class="update">
+        <h3>Update article</h3>
+        <ul>
+          <li>Title: {{ cache.title }}</li>
+          <li>Tags: {{ cache.tags }}</li>
+
+          <li class="submit">
+            <span v-show="articleUpdated" class="message">Updated!</span>
+            <button @click="updateArticle">Update</button>
+          </li>
+        </ul>
+      </div>
       <div class="save">
-        <h3>Save article</h3>
+        <h3>New article</h3>
         <ul>
           <li>
             <input
@@ -12,23 +24,22 @@
               required
               placeholder="Title"
             />
-            <span class="preview">
-              <b>{{ this.newArticle.title }}</b>
-            </span>
+            <span class="preview">{{ this.newArticle.title }}</span>
           </li>
           <li>
             <input type="text" placeholder="Tag" v-model="tag" />
             <button v-on:click="addTag">Add</button>
-            <ul class="inline-list preview">
+            <ul class="inline-list preview article-title">
               <li v-for="tag in newArticle.tags" v-bind:key="tag.id">{{ tag }}&nbsp;</li>
             </ul>
           </li>
           <li class="submit">
+            <span v-show="mdInputSaved" class="message">Article saved!</span>
             <button v-on:click="saveArticle" v-bind:disabled="mdInputSaved">Save</button>
-            <span v-if="mdInputSaved" class="message">Article saved!</span>
           </li>
         </ul>
       </div>
+
       <div class="load">
         <h3>Load article</h3>
         <ul>
@@ -45,8 +56,8 @@
               <code>{{ articles[toLoad].date | toDate }}</code>
             </span>
           </li>
-          <li>
-            <button v-on:click="loadArticle" class="submit">Load</button>
+          <li class="submit">
+            <button v-on:click="loadArticle">Load</button>
           </li>
         </ul>
       </div>
@@ -66,20 +77,21 @@ ToDo:
 import { bus } from "../main";
 import utils from "./utils";
 
-
 export default {
   props: {
-    mdInput: {
-      type: String
+    cache: {
+      type: Object
     }
   },
   data() {
     return {
       mdInputSaved: false,
+      articleUpdated: false,
       articles: [],
       toLoad: 0,
       tag: "",
       newArticle: {
+        id: "",
         date: 0,
         title: "",
         tags: [],
@@ -91,7 +103,6 @@ export default {
   watch: {
     tag: function() {
       let tag = this.tag;
-
       if (tag.match(/\s+/)) {
         this.tag = tag.replace(/\s+/, "");
       }
@@ -103,11 +114,42 @@ export default {
       this.newArticle.tags.push(this.tag);
       this.tag = "";
     },
+    updateArticle: function() {
+      // Get target article
+      let savedTitles = [];
+      let updateIdx = null;
+      this.articles.forEach(ele => {
+        savedTitles.push(ele.title);
+      });
+      if (!savedTitles.includes(this.cache.title)) {
+        alert("bug at mdSave l.128");
+        return;
+      }
 
+      updateIdx = savedTitles.indexOf(this.cache.title);
+      // create new article
+      const article = {
+        id: this.cache.id,
+        date: this.cache.date,
+        title: this.cache.title,
+        tags: this.cache.tags,
+        content: this.cache.mdInput
+      };
+      // Save to localStorage
+      this.articles[updateIdx] = utils.deepCopy(article);
+      localStorage.setItem("md-articles", JSON.stringify(this.articles));
+
+      // Update status
+      bus.$emit("mdInputSaved", true);
+      this.articleUpdated = true;
+      setTimeout(() => {
+        this.articleUpdated = false;
+      }, 3000);
+    },
     saveArticle: function() {
       // validity check
-      if (!this.newArticle.title) return;
-      if (!this.mdInput) return;
+      if (this.newArticle.title == "") return;
+      if (this.cache.mdInput == "") return;
 
       // Check title conflict
       let savedTitles = [];
@@ -115,29 +157,28 @@ export default {
       this.articles.forEach(ele => {
         savedTitles.push(ele.title);
       });
-
       if (savedTitles.includes(this.newArticle.title)) {
-        updateIdx = savedTitles.indexOf(this.newArticle.title);
-        var keepOld = !confirm("Article exists! Overwrite?");
-        if (keepOld) return;
+        alert("Article already exist!\nPlease choose a new title.");
+        this.newArticle.title = "";
+        this.newArticle.tags = [];
+        return;
       }
 
       // Create article obj
+      this.newArticle.id = new Date().getTime();
       this.newArticle.date = new Date().getTime();
-      this.newArticle.content = this.mdInput;
+      this.newArticle.content = this.cache.mdInput;
 
       // Add new article
       var article = utils.deepCopy(this.newArticle);
-
-      if (updateIdx != null) {
-        this.articles[updateIdx] = article;
-      } else this.articles.unshift(article);
+      this.articles.unshift(article);
 
       localStorage.setItem("md-articles", JSON.stringify(this.articles));
 
       // Update status
       bus.$emit("mdInputSaved", true);
       this.newArticle.title = "";
+      this.newArticle.content = "";
       this.newArticle.tags = [];
     },
 
@@ -148,9 +189,9 @@ export default {
 
     loadArticle: function() {
       if (this.mdInputSaved)
-        bus.$emit("loadArticle", this.articles[this.toLoad].content);
+        bus.$emit("loadArticle", this.articles[this.toLoad]);
       else if (confirm("Markdown content not saved!"))
-        bus.$emit("loadArticle", this.articles[this.toLoad].content);
+        bus.$emit("loadArticle", this.articles[this.toLoad]);
 
       // Cleaup
       this.newArticle.title = "";
@@ -173,8 +214,7 @@ export default {
       document.querySelector("a.toggle-modal").classList.toggle("btn-active");
     }
 
-    document.querySelector('.close-button').onclick = toggleModal;
-
+    document.querySelector(".close-button").onclick = toggleModal;
   },
   created() {
     // listen to 'mdInputSaved'
@@ -204,22 +244,58 @@ select {
 }
 
 .preview {
-  float: right;
+  /* float: right; */
+  display: inline-block;
+  text-align: right;
+  padding: 0 1em;
+  margin: 0 auto;
+  max-width: 15em;
+  max-height: 1.2em;
+  overflow: hidden;
+  font-size: 0.8em;
 }
 
-.preview.article-title {
-  float: none;
-  display: block;
-  height: 1.2em;
+.preview.inline-list {
+  padding-left: 1em;
 }
 
 .preview code {
-  font-size: 0.7em;
+  font-size: 0.8em;
 }
 
 .submit {
   display: block;
-  margin: 15px 0;
+  position: relative;
+}
+.submit > button {
+  display: inline-block;
+  width: 12%;
+  margin: 15px 0 15px 85%;
+  padding: 0.8%;
+}
+.submit > span {
+  position: absolute;
+  top: 30%;
+  left: 0%;
+}
+
+.modal-content {
+  z-index: 200;
+}
+.modal-content > div {
+  padding: 1.5px 8px;
+  margin: 5px 0 15px;
+  border-radius: 5px;
+}
+.modal-content > div:nth-child(1) {
+  background: #8785ffa2;
+}
+.modal-content > div:nth-child(2) {
+  background: #fdff85ea;
+}
+.modal-content > div:nth-child(3) {
+  background: #ff8785a2;
+  margin-bottom: 0;
 }
 
 .modal-content ul {
@@ -230,10 +306,6 @@ select {
 
 .modal-content h3 {
   margin: 10px 0;
-}
-
-.modal-content > div {
-  margin: 5px 0 20px;
 }
 
 .modal {
@@ -256,7 +328,7 @@ select {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 1rem 1.5rem;
+  padding: 0.6rem 1rem;
   width: 24rem;
   border-radius: 0.5rem;
 }

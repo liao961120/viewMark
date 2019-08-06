@@ -1,12 +1,12 @@
 <template>
   <div class="outer">
-    <md-save v-bind:mdInput="mdInput"></md-save>
+    <md-save v-bind:cache="cache"></md-save>
     <div
       v-bind:class="{'container': isOneColumn, 'two-cols': !isOneColumn && !isFullView, 'full-view': isFullView}"
     >
       <div class="input md-input">
         <codemirror
-          v-model="mdInput"
+          v-model="cache.mdInput"
           v-bind:options="cmOptions"
           v-on:update="onCmUpdate"
           v-on:blur="onCmDefocus"
@@ -65,8 +65,14 @@ export default {
   },
   data() {
     return {
-      mdInput:
-        "The *p.d.f.* of the normal distribution is \n\n$$\n\\frac{1}{\\sqrt{2 \\pi} \\sigma} e ^ {- \\frac{(x - \\mu)^2}{2 \\sigma ^2}}\n$$",
+      cache: {
+        id: "",
+        date: 0,
+        title: "",
+        tags: [],
+        mdInput:
+          "The *p.d.f.* of the normal distribution is \n\n$$\n\\frac{1}{\\sqrt{2 \\pi} \\sigma} e ^ {- \\frac{(x - \\mu)^2}{2 \\sigma ^2}}\n$$"
+      },
       mdInputSaved: false,
       cmOptions: {
         // codemirror options
@@ -106,7 +112,7 @@ export default {
     },
     onCmUpdate(cm) {
       // Save text to localStorage
-      localStorage.setItem("md-input", this.mdInput);
+      localStorage.setItem("md-input", JSON.stringify(this.cache));
 
       // Set mdInputSaved to false
       bus.$emit("mdInputSaved", false);
@@ -131,14 +137,15 @@ export default {
     mdRender: function() {
       // render Markdown
       var temp = document.createElement("div");
-      temp.innerHTML = marked(this.mdInput);
+      temp.innerHTML = marked(this.cache.mdInput);
 
       return temp.innerHTML;
     }
   },
   created() {
-    if (localStorage.getItem("md-input"))
-      this.mdInput = localStorage.getItem("md-input");
+    var cache = localStorage.getItem("md-input");
+    if (cache)
+      this.cache = JSON.parse(cache);
 
     // Listen to 'mdInputSaved'
     bus.$on("mdInputSaved", data => {
@@ -147,7 +154,13 @@ export default {
 
     // Listen to 'loadArticle': load content from local storage
     bus.$on("loadArticle", data => {
-      this.mdInput = data;
+      console.log(data);
+      this.cache.id = data.id;
+      this.cache.date = data.date;
+      this.cache.title = data.title;
+      this.cache.tags = data.tags;
+      this.cache.mdInput = data.content;
+      
       setTimeout(() => bus.$emit("mdInputSaved", true), 100);
     });
 
@@ -157,7 +170,7 @@ export default {
       if (!data.isMdSnippet) return;
 
       // Insert snippet
-      this.mdInput += data.snippet;
+      this.cache.mdInput += data.snippet;
 
       // Get cursor position
       var linenum = this.cmObject.getCursor().line + 0;
@@ -176,7 +189,7 @@ export default {
     });
 
     // Listen on toggle full screen
-    bus.$on("toggleFullScreen", data => {
+    bus.$on("toggleFullScreen", data => {this.cache.title = data.title;
       // one column edit -> two columns -> one column view
 
       // one column edit -> two columns
