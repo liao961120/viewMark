@@ -46,13 +46,20 @@ export default {
       mathInput: "\\frac{a}{b}",
       cmOptions: {
         // codemirror options
-        tabSize: 4,
+        tabSize: 2,
         mode: "stex",
         theme: "material",
         styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
         styleActiveLine: true,
         lineNumbers: true,
-        lineWrapping: true
+        lineWrapping: true,
+        extraKeys: {
+          // Tab to space
+          Tab: function(cm) {
+            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+            cm.replaceSelection(spaces);
+          }
+        }
       },
       cmObject: {}
     };
