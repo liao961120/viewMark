@@ -32,6 +32,7 @@ body {
 }
 
 a {
+  user-select: none;
   cursor: pointer;
   color: #002efe;
   text-decoration: underline;
@@ -138,7 +139,6 @@ h6 {
   font-size: 0.7em;
   color: var(--message);
 }
-
 
 /* Scroll bars */
 /* width */
