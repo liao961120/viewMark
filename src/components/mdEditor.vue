@@ -203,7 +203,7 @@ export default {
     });
 
     // Listen on toggle full screen
-    bus.$on("toggleFullScreen", data => {this.cache.title = data.title;
+    bus.$on("toggleFullScreen", data => {
       // one column edit -> two columns -> one column view
 
       // one column edit -> two columns
