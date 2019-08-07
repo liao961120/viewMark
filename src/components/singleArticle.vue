@@ -1,6 +1,6 @@
 <template>
   <div class="single-article">
-    <h2>{{ article.title }}</h2>
+    <h1 class="title">{{ article.title }}</h1>
     <div class="article-info">
       <ul class="tags left">
         <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
@@ -41,12 +41,15 @@ let marked = require("marked");
 
 // Event bus
 import { bus } from '../main';
+// Mixins
+import h6Modify from '../mixins/h6Modify';
 
 export default {
   props: {
     article: Object,
     viewArticle: Object
   },
+  mixins: [h6Modify],
 
   /*
   watch: {
@@ -104,6 +107,9 @@ export default {
     
     // Syntax highlight
     Prism.highlightAll();
+
+    // Modify h6 paragraph
+    this.attachH6();
   }
 };
 </script>

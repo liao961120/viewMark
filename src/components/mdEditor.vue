@@ -58,11 +58,15 @@ import appFooter from "./footer.vue";
 import { bus } from "../main";
 import { setPriority } from "os";
 
+// Mixins
+import h6Modify from "../mixins/h6Modify";
+
 export default {
   components: {
     "md-save": mdSave,
     "app-footer": appFooter
   },
+  mixins: [h6Modify],
   data() {
     return {
       cache: {
@@ -76,13 +80,20 @@ export default {
       mdInputSaved: false,
       cmOptions: {
         // codemirror options
-        tabSize: 4,
+        tabSize: 2,
         mode: "markdown",
         theme: "material",
         styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
         styleActiveLine: true,
         lineNumbers: true,
-        lineWrapping: true
+        lineWrapping: true,
+        extraKeys: {
+          // Tab to space
+          Tab: function(cm) {
+            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+            cm.replaceSelection(spaces);
+          }
+        }
       },
       cmObject: {},
       isOneColumn: false,
@@ -124,6 +135,9 @@ export default {
 
       // Reload Prism
       Prism.highlightAll();
+
+      // Modify h6
+      this.attachH6();
     },
     onCmDefocus(cm) {},
     currentCursor: function() {
