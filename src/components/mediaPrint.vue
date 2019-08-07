@@ -1,6 +1,6 @@
 <template>
   <div class="outer">
-      <codemirror v-model.lazy="mediaPrint" :options="cmOptions"></codemirror>
+    <codemirror v-model.lazy="mediaPrint" :options="cmOptions"></codemirror>
     <footer>
       <ul class="left">
         <li>
@@ -11,7 +11,9 @@
         <li></li>
       </ul>
       <ul class="right">
-        <li><a @click="update">Update</a></li>
+        <li>
+          <a @click="update">Update</a>
+        </li>
       </ul>
     </footer>
   </div>
@@ -31,42 +33,55 @@ export default {
     return {
       cmOptions: {
         // codemirror options
-        tabSize: 4,
+        tabSize: 2,
         mode: "css",
         theme: "material",
         styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
         styleActiveLine: true,
         lineNumbers: true,
-        lineWrapping: true
+        lineWrapping: true,
+        extraKeys: {
+          // Tab to space
+          Tab: function(cm) {
+            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+            cm.replaceSelection(spaces);
+          }
+        }
       },
       mediaPrint: `@media print {
-    nav, footer {
-        display: none !important;
-    }
-    div.outer {
-        margin: 0 auto;
-    }
-    .single-article {
-        width: 100% !important;
-        margin: 1cm !important;
-    }
-    .article-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr !important;
-    }
-    .article-info .date {
-        text-align: left !important;
-    }
-    .content {
-        padding: 0 !important;
-        margin-top: 1cm !important;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        page-break-after: avoid;
-    }
-    pre, blockquote {
-        page-break-inside: avoid;
-    }
+  body {
+    font-size: 12pt;
+  }
+  p {
+    font-size: 1em !important;
+  }
+  h1, h2, h3, h4, h5 {
+    page-break-after: avoid;
+  }
+  nav, footer {
+    display: none !important;
+  }
+  div.outer {
+    margin: 0 auto;
+  }
+  .single-article {
+    width: 90% !important;
+    margin: 1cm !important;
+  }
+  .article-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .article-info .date {
+    text-align: left !important;
+  }
+  .content {
+    padding: 0 !important;
+    margin-top: 1cm !important;
+  }
+  pre, blockquote {
+    page-break-inside: avoid;
+  }
 }`
     };
   },
@@ -98,9 +113,9 @@ export default {
 
 <style scoped>
 .outer {
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 button {
   display: block;
