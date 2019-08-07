@@ -21,7 +21,9 @@
         <li></li>
       </ul>
       <ul class="right">
-        <li></li>
+        <li>
+          <router-link to="/print">media print</router-link>
+        </li>
       </ul>
     </footer>
   </div>
