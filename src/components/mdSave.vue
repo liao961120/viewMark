@@ -179,6 +179,7 @@ export default {
 
       // Update status
       bus.$emit("mdInputSaved", true);
+      bus.$emit("loadArticle", this.articles[0])
       this.newArticle.title = "";
       this.newArticle.content = "";
       this.newArticle.tags = [];
