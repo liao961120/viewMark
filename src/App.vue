@@ -4,15 +4,19 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+      <!-- Auto load media print stylesheets when app starts -->
+      <media-print v-show="false"></media-print>
   </div>
 </template>
 
 <script>
 import nav from "./components/nav";
+import mediaPrint from "./components/mediaPrint";
 
 export default {
   components: {
-    "app-nav": nav
+    "app-nav": nav,
+    'media-print': mediaPrint,
   }
 };
 </script>
