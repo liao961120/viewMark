@@ -22,7 +22,6 @@
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/stex/stex";
 import "codemirror/theme/material.css";
-
 // require active-line.js
 import "codemirror/addon/selection/active-line";
 import "codemirror/addon/selection/mark-selection";
