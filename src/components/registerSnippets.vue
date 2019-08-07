@@ -7,7 +7,7 @@
           <input type="text" placeholder="Name" v-model.lazy="toRegister.name" maxlength="18" />
         </li>
         <li>
-          <input type="text" placeholder="Snippets" v-model="toRegister.snippet" />
+          <input type="text" placeholder="Snippet" v-model="toRegister.snippet" />
         </li>
         <li>
           Cursor (start | end) : <br>
