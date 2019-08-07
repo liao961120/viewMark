@@ -1,7 +1,6 @@
 <template>
   <div class="outer">
-    <textarea v-model.lazy="mediaPrint"></textarea>
-    <button @click="update">Update</button>
+      <codemirror v-model.lazy="mediaPrint" :options="cmOptions"></codemirror>
     <footer>
       <ul class="left">
         <li>
@@ -12,38 +11,62 @@
         <li></li>
       </ul>
       <ul class="right">
-        <li></li>
+        <li><a @click="update">Update</a></li>
       </ul>
     </footer>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+import "codemirror/lib/codemirror.css";
+import "codemirror/mode/css/css";
+import "codemirror/theme/material.css";
+// require active-line.js
+import "codemirror/addon/selection/active-line";
+import "codemirror/addon/selection/mark-selection";
+
 export default {
   data() {
     return {
+      cmOptions: {
+        // codemirror options
+        tabSize: 4,
+        mode: "css",
+        theme: "material",
+        styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
+        styleActiveLine: true,
+        lineNumbers: true,
+        lineWrapping: true
+      },
       mediaPrint: `@media print {
-  nav, footer {
-    display: none !important;
-  }
-  div.outer {
-    margin: 0 auto;
-  }
-  .single-article {
-    width: 100% !important;
-    margin: 1cm !important;
-  }
-  .article-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .article-info .date {
-    text-align: left !important;
-  }
-  .content {
-    padding: 0 !important;
-    margin-top: 1cm !important;
-  }
+    nav, footer {
+        display: none !important;
+    }
+    div.outer {
+        margin: 0 auto;
+    }
+    .single-article {
+        width: 100% !important;
+        margin: 1cm !important;
+    }
+    .article-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr !important;
+    }
+    .article-info .date {
+        text-align: left !important;
+    }
+    .content {
+        padding: 0 !important;
+        margin-top: 1cm !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+    pre, blockquote {
+        page-break-inside: avoid;
+    }
 }`
     };
   },
@@ -74,12 +97,10 @@ export default {
 </script>
 
 <style scoped>
-textarea {
-  display: block;
-  width: 80%;
-  margin: 20px auto;
-  height: 25rem;
-  font-size: 0.9em;
+.outer {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
 }
 button {
   display: block;
