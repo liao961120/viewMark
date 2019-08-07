@@ -4,8 +4,8 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-      <!-- Auto load media print stylesheets when app starts -->
-      <media-print v-show="false"></media-print>
+    <!-- Auto load media print stylesheets when app starts -->
+    <media-print v-show="false"></media-print>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ import mediaPrint from "./components/mediaPrint";
 export default {
   components: {
     "app-nav": nav,
-    'media-print': mediaPrint,
+    "media-print": mediaPrint
   }
 };
 </script>
@@ -28,13 +28,11 @@ export default {
 html {
   height: 100%;
 }
-
 body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", Helvetica, "open sans", sans-serif;
 }
-
 a {
   user-select: none;
   cursor: pointer;
@@ -45,6 +43,39 @@ a:hover {
   text-decoration: none;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+h1 {
+  font-size: 2.1em;
+}
+h2 {
+  font-size: 1.8em;
+}
+h3 {
+  font-size: 1.6em;
+}
+h4 {
+  font-size: 1.4em;
+}
+h5 {
+  font-size: 1.2em;
+}
+/* Special h6 features */
+.single-article h6,
+.md-preview h6 {
+  display: none !important;
+}
+.single-article h6 + p::before,
+.md-preview h6 + p::before {
+  content: attr(data-h6);
+  font-weight: bold;
+}
 /*/////////////// Footer start /////////////////*/
 footer {
   background: var(--theme-dark);
