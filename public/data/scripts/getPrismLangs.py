@@ -9,5 +9,5 @@ with open('supported.txt') as f:
             print(matched.group(1))
             out.append(matched.group(1))
 
-with open('supportLangs.json', 'w') as f:
+with open('../supportLangs.json', 'w') as f:
     json.dump(out, f)
