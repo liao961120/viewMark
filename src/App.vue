@@ -6,24 +6,46 @@
     </keep-alive>
     <!-- Auto load media print stylesheets when app starts -->
     <media-print v-show="false"></media-print>
+    <add-syntax v-show="false"></add-syntax>
+
   </div>
 </template>
 
 <script>
 import nav from "./components/nav";
 import mediaPrint from "./components/mediaPrint";
+import addSyntax from "./components/syntax";
 
 export default {
   components: {
     "app-nav": nav,
-    "media-print": mediaPrint
+    "media-print": mediaPrint,
+    "add-syntax": addSyntax,
+  },
+
+  mounted() {
+    function loadPrism() {
+      const prism = document.createElement("script");
+      //const autoLoader = document.createElement("script");
+      const style = document.createElement("style");
+      prism.src = "./data/prism-core.min.js";
+      //autoLoader.src = "./data/prism-autoloader.min.js";
+      //autoLoader.onload = () => {Prism.plugins.autoloader.languages_path = '.data/prism-components/';}
+      style.rel = "stylesheet";
+      style.href = "./data/prism.min.css";
+
+      document.head.append(prism);
+      //document.head.append(autoLoader);
+      document.head.append(style);
+    }
+
+    //loadPrism();
   }
 };
 </script>
 
 <style>
 @import "./assets/variables.css";
-@import "./assets/print.css";
 
 html {
   height: 100%;
@@ -50,6 +72,7 @@ h4,
 h5 {
   margin-top: 1.5rem;
   margin-bottom: 0.9rem;
+  word-spacing: 0.2em;
 }
 h1 {
   font-size: 2.1em;
@@ -104,8 +127,10 @@ footer li {
 footer a {
   font-size: 0.75em;
   text-decoration: none;
-  padding: 4px 6px;
-  border-radius: 10px;
+  padding: 4px;
+  margin-left: 2px;
+  margin-right: 2px;
+  border-radius: 6.5px;
   background: var(--btn-inactive);
   color: var(--theme-dark);
 }
