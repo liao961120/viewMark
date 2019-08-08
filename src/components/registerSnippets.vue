@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
+    <h2>Register new snippet</h2>
     <form>
-      <h3>Register new snippet</h3>
       <ul>
         <li>
           <input type="text" placeholder="Name" v-model.lazy="toRegister.name" maxlength="18" />
@@ -215,6 +215,9 @@ export default {
 
 
 <style scoped>
+h2 {
+  text-align: center;
+}
 form {
   margin: 10px auto;
   width: 12%;
