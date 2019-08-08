@@ -4,14 +4,8 @@
 
 ## To Do
 
-1. mdSave
-    - update article (select menu)
+1. Article editing
     - add/delete tags
-
-1. Viewer
     - Remove articles
-    - page media for printing
 
-1. footer
-    - prism syntax highlight cache (localStorage)
-        - better selection mechanism
+1. Refactor footer components
