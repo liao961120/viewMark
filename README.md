@@ -8,7 +8,7 @@
     - add/delete tags
     - Remove articles
 
-1. Put data in .json instead of hard written.
+1. Put data in .json instead of hard-coded.
 
 1. Refactor footer components
 
