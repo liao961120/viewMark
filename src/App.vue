@@ -7,7 +7,6 @@
     <!-- Auto load media print stylesheets when app starts -->
     <media-print v-show="false"></media-print>
     <add-syntax v-show="false"></add-syntax>
-
   </div>
 </template>
 
@@ -20,27 +19,10 @@ export default {
   components: {
     "app-nav": nav,
     "media-print": mediaPrint,
-    "add-syntax": addSyntax,
+    "add-syntax": addSyntax
   },
 
-  mounted() {
-    function loadPrism() {
-      const prism = document.createElement("script");
-      //const autoLoader = document.createElement("script");
-      const style = document.createElement("style");
-      prism.src = "./data/prism-core.min.js";
-      //autoLoader.src = "./data/prism-autoloader.min.js";
-      //autoLoader.onload = () => {Prism.plugins.autoloader.languages_path = '.data/prism-components/';}
-      style.rel = "stylesheet";
-      style.href = "./data/prism.min.css";
-
-      document.head.append(prism);
-      //document.head.append(autoLoader);
-      document.head.append(style);
-    }
-
-    //loadPrism();
-  }
+  mounted() {}
 };
 </script>
 
@@ -177,7 +159,24 @@ footer .right a {
   opacity: 1;
   width: 0.8em;
 }
-/*//////////////// Footer end ////////////////////*/
+/*/////////// Footer end //////////////*/
+
+/*////////// Tocbot /////////*/
+.tocbot-toc {
+  position: fixed;
+  width: 20%;
+  top: 90px;
+  right: 0;
+}
+.tocbot-toc .toc-list li {
+  list-style: none;
+}
+.toc-list {
+    margin: 0;
+    padding-left: 0.7em !important;
+}
+/*//////// Tocbot end ////////*/
+
 
 .outer {
   position: relative;
