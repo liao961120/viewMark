@@ -10,9 +10,22 @@
           <input type="text" placeholder="Snippet" v-model="toRegister.snippet" />
         </li>
         <li>
-          Cursor (start | end) : <br>
-          <input type="number" step="1" min="0" v-model="toRegister.cursorPos[0]" class="select-start"/>
-          <input type="number" step="1" min="0" v-model="toRegister.cursorPos[1]" class="select-end"/>
+          Cursor (start | end) :
+          <br />
+          <input
+            type="number"
+            step="1"
+            min="0"
+            v-model="toRegister.cursorPos[0]"
+            class="select-start"
+          />
+          <input
+            type="number"
+            step="1"
+            min="0"
+            v-model="toRegister.cursorPos[1]"
+            class="select-end"
+          />
         </li>
         <li>
           Snippet for:
@@ -79,14 +92,14 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 
 // Components
-import appFooter from "./footer-static"
+import appFooter from "./footer-static";
 
 // Event bus
 import { bus } from "../main";
 
 export default {
   components: {
-    'app-footer': appFooter,
+    "app-footer": appFooter
   },
 
   data() {
@@ -98,7 +111,7 @@ export default {
         isMdSnippet: true
       },
       mdSnippets: [],
-      mathSnippets: [],
+      mathSnippets: []
     };
   }, //end data
 
@@ -172,27 +185,25 @@ export default {
   computed: {},
 
   watch: {
-    'toRegister.snippet': function() {
+    "toRegister.snippet": function() {
       this.toRegister.cursorPos[1] = this.toRegister.snippet.length;
     },
-    'toRegister.cursorPos': function() {
+    "toRegister.cursorPos": function() {
       var start = parseInt(this.toRegister.cursorPos[0]);
       var end = parseInt(this.toRegister.cursorPos[1]);
-      
+
       if (start > this.toRegister.snippet.length)
         this.toRegister.cursorPos[0] = this.toRegister.snippet.length;
 
       if (end > this.toRegister.snippet.length)
         this.toRegister.cursorPos[1] = this.toRegister.snippet.length;
-      
+
       if (start > end)
         this.toRegister.cursorPos[1] = this.toRegister.cursorPos[0];
-      
-      
+
       this.toRegister.cursorPos[1] = parseInt(this.toRegister.cursorPos[1]);
       this.toRegister.cursorPos[2] = parseInt(this.toRegister.cursorPos[2]);
     }
-
   },
 
   created() {
@@ -215,6 +226,10 @@ export default {
 
 
 <style scoped>
+.outer {
+  margin: 55px 0 0 0;
+  padding: 0;
+}
 h2 {
   text-align: center;
 }
@@ -232,7 +247,8 @@ form > ul {
 form input {
   width: 98%;
 }
-form .select-start, .select-end {
+form .select-start,
+.select-end {
   display: inline-block;
   width: 38%;
   margin: 4px 0 6px;
@@ -248,7 +264,8 @@ input[type="number"] {
   width: 2.75em;
   margin: 0 0 0 10px;
 } */
-form > h3, p {
+form > h3,
+p {
   text-align: center;
 }
 
