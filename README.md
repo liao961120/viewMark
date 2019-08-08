@@ -8,8 +8,6 @@
     - add/delete tags
     - Remove articles
 
-1. Put data in .json instead of hard-coded.
-
 1. Refactor footer components
 
 1. Backup: export/import user settings
