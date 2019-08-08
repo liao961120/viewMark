@@ -2,41 +2,45 @@
   <div class="single-article">
     <h1 class="title">{{ article.title }}</h1>
     <div class="article-info">
-      <ul class="tags left">
+      <ul class="tags">
         <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
       </ul>
-      <ul class="center"></ul>
-      <ul class="right">
+      <ul>
         <li class="date">{{ article.date | toDate }}</li>
       </ul>
     </div>
+
     <div v-html="mdRender" class="content md-content"></div>
+    <div class="toc">
+      <div class="tocbot-toc"></div>
+    </div>
+
     <footer>
-      <ul class="left">
-      </ul>
+      <ul class="left"></ul>
       <ul class="center">
         <li></li>
       </ul>
-      <ul class="right">
-      </ul>
+      <ul class="right"></ul>
     </footer>
   </div>
 </template>
 
 <script>
-///// Parsers //////
 // katex
 import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
 let marked = require("marked");
-var Prism = require('prismjs');
-import 'prismjs/themes/prism.css';
+var Prism = require("prismjs");
+import "prismjs/themes/prism.css";
+// Toc
+import "tocbot/dist/tocbot.min";
+import "tocbot/dist/tocbot.css";
 
 // Event bus
-import { bus } from '../main';
+import { bus } from "../main";
 // Mixins
-import h6Modify from '../mixins/h6Modify';
+import h6Modify from "../mixins/h6Modify";
 
 export default {
   props: {
@@ -53,8 +57,7 @@ export default {
     };
   },
 
-  methods: {
-  },
+  methods: {},
 
   filters: {
     toDate: function(value) {
@@ -87,12 +90,22 @@ export default {
         ]
       });
     }
-    
+
     // Syntax highlight
     Prism.highlightAll();
 
     // Modify h6 paragraph
     this.attachH6();
+
+    // Add toc to .md-content
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: ".tocbot-toc",
+      // Where to grab the headings to build the table of contents.
+      contentSelector: ".md-content",
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: "h2, h3, h4, h5"
+    });
   }
 };
 </script>
@@ -100,18 +113,23 @@ export default {
 <style scoped>
 .single-article {
   width: 80%;
-  padding: 10px auto;
-  margin: 10px auto;
+  padding: 0 auto;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 4.5fr 1fr;
+  grid-auto-rows: minmax(2em, auto);
+  grid-template-areas:
+    "title toc"
+    "article-info toc"
+    "md-content toc";
 }
-
-h2 {
-  margin: 10px 0;
-  font-size: 1.8em;
+.title {
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
-
 .article-info {
   display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 .article-info ul {
   list-style-type: none;
@@ -131,6 +149,12 @@ h2 {
   overflow-wrap: break-word;
   text-align: justify;
 }
+.content {
+  font-size: 1.1em;
+  font-family: var(--serif);
+  margin: 20px 0;
+  padding: 10px 0;
+}
 
 li.tag {
   display: inline;
@@ -144,11 +168,18 @@ li.tag:hover {
   background: rgb(211, 211, 211);
 }
 
-.content {
-  font-size: 1.1em;
-  font-family: var(--serif);
-  margin: 20px 0;
-  padding: 10px 0;
+/* grid areas */
+.single-article > h1 {
+  grid-area: title;
+}
+.single-article > .article-info {
+  grid-area: article-info;
+}
+.single-article > .md-content {
+  grid-area: md-content;
+}
+.single-article > .toc {
+  grid-area: toc;
 }
 </style>
 
