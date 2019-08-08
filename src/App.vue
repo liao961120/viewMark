@@ -167,7 +167,6 @@ pre[class^=" language"] {
   border-radius: 14px;
 }
 
-
 /*////////// Tocbot /////////*/
 .tocbot-toc {
   position: fixed;
@@ -179,11 +178,22 @@ pre[class^=" language"] {
   list-style: none;
 }
 .toc-list {
-    margin: 0;
-    padding-left: 0.7em !important;
+  margin: 0;
+  padding-left: 0.7em !important;
+}
+.content h1::before,
+.content h2::before,
+.content h3::before,
+.content h4::before,
+.content h5::before,
+.content h6::before {
+  display: block;
+  content: " ";
+  height: 60px;
+  margin-top: -60px;
+  visibility: hidden;
 }
 /*//////// Tocbot end ////////*/
-
 
 .outer {
   position: relative;
