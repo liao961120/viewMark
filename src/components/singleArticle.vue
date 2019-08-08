@@ -22,7 +22,8 @@
       </ul>
       <ul class="right">
         <li>
-          <router-link to="/print">media print</router-link>
+          <router-link to="/print">Print Style</router-link>
+          <router-link to="/syntax">Syntax</router-link>
         </li>
       </ul>
     </footer>
@@ -31,13 +32,13 @@
 
 <script>
 ///// Parsers //////
-import prism from "./prism";
-import "../assets/prism.css";
 // katex
 import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
 let marked = require("marked");
+var Prism = require('prismjs');
+import 'prismjs/themes/prism.css';
 
 // Event bus
 import { bus } from '../main';
@@ -50,14 +51,6 @@ export default {
     viewArticle: Object
   },
   mixins: [h6Modify],
-
-  /*
-  watch: {
-    'viewArticle.idx': function() {
-      setTimeout(() => {this.renderMath();}, 4000);
-    }
-  },
-  */
 
   data() {
     return {

@@ -20,7 +20,7 @@
     <ul class="right">
       <template v-if="isMdSnippet">
         <li>
-          <a v-on:click="addSyntaxHighlight" class="prism right">Highlight Code</a>
+          <router-link to="/syntax" class="prism right">Syntax</router-link>
         </li>
       </template>
       <template v-if="isMathSnippet"></template>
@@ -74,21 +74,6 @@ export default {
       modal.classList.toggle("show-modal");
       document.querySelector("a.toggle-modal").classList.toggle("btn-active");
     },
-
-    addSyntaxHighlight: function(event) {
-      const lang = prompt(
-        "Enter a programming language for syntax highlighting.",
-        "python"
-      );
-      if (lang == null) return;
-      // Custom lang
-      const script = document.createElement("script");
-      script.setAttribute(
-        "src",
-        `https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-${lang.toLowerCase()}.min.js`
-      );
-      document.head.append(script);
-    }
   },
   created() {
     var item = ["mathSnippets", "mdSnippets"].splice(this.isMdSnippet, 1);

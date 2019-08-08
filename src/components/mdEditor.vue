@@ -39,8 +39,8 @@ import "codemirror/addon/selection/mark-selection";
 
 // custom functions
 import utils from "./utils";
-import prism from "./prism";
-import "../assets/prism.css";
+var Prism = require('prismjs');
+import 'prismjs/themes/prism.css';
 
 // katex
 import katex from "katex";
