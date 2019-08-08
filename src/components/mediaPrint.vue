@@ -2,11 +2,7 @@
   <div class="outer">
     <codemirror v-model.lazy="mediaPrint" :options="cmOptions"></codemirror>
     <footer>
-      <ul class="left">
-        <li>
-          <a onclick="window.history.back()" class="back">Back</a>
-        </li>
-      </ul>
+      <ul class="left"></ul>
       <ul class="center">
         <li></li>
       </ul>
@@ -48,41 +44,7 @@ export default {
           }
         }
       },
-      mediaPrint: `@media print {
-  body {
-    font-size: 12pt;
-  }
-  p {
-    font-size: 1em !important;
-  }
-  h1, h2, h3, h4, h5 {
-    page-break-after: avoid;
-  }
-  nav, footer {
-    display: none !important;
-  }
-  div.outer {
-    margin: 0 auto;
-  }
-  .single-article {
-    width: 90% !important;
-    margin: 1cm !important;
-  }
-  .article-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .article-info .date {
-    text-align: left !important;
-  }
-  .content {
-    padding: 0 !important;
-    margin-top: 1cm !important;
-  }
-  pre, blockquote {
-    page-break-inside: avoid;
-  }
-}`
+      mediaPrint: ""
     };
   },
   methods: {
@@ -98,6 +60,16 @@ export default {
   created() {
     var mediaPrint = localStorage.getItem("media-print");
     if (mediaPrint) this.mediaPrint = mediaPrint;
+    else {
+      this.$http
+        .get("./data/print.css.json")
+        .then(data => {
+          return data.json();
+        })
+        .then(data => {
+          this.mediaPrint = data;
+        });
+    }
   },
   mounted() {
     var style = document.querySelector("style.media-print");

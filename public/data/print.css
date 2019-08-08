@@ -1,0 +1,32 @@
+@media print {
+  body {
+    font-size: 12pt;
+  }
+  p {
+    font-size: 1em !important;
+  }
+  nav, footer {
+    display: none !important;
+  }
+  div.outer {
+    margin: 0 auto !important;
+  }
+  .single-article {
+    width: 90% !important;
+    margin: 1cm !important;
+  }
+  .article-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .article-info .date {
+    text-align: left !important;
+  }
+  .content {
+    padding: 0 !important;
+    margin-top: 1cm !important;
+  }
+  pre, blockquote {
+    page-break-inside: avoid;
+  }
+}
