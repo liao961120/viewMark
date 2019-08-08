@@ -55,6 +55,7 @@ h5 {
   margin-top: 1.5rem;
   margin-bottom: 0.9rem;
   word-spacing: 0.2em;
+  font-family: var(--serif);
 }
 h1 {
   font-size: 2.1em;
@@ -159,7 +160,13 @@ footer .right a {
   opacity: 1;
   width: 0.8em;
 }
-/*/////////// Footer end //////////////*/
+
+/*////////// Code chunk styles //////////*/
+pre[class^=" language"] {
+  font-size: 0.78em !important;
+  border-radius: 14px;
+}
+
 
 /*////////// Tocbot /////////*/
 .tocbot-toc {
@@ -181,15 +188,6 @@ footer .right a {
 .outer {
   position: relative;
   margin: 70px 0 75px; /* space for nav and footer */
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Alegreya", Georgia, serif;
 }
 
 .message {
