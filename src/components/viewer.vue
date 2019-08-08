@@ -105,6 +105,7 @@ export default {
     toArticle: function(idx) {
       this.viewArticle.show = false;
       this.viewArticle.idx = null;
+      bus.$emit('toReader', false);  // lock nav back btn
 
       setTimeout(() => {
         this.viewArticle.idx = idx;

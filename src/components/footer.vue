@@ -5,9 +5,6 @@
         <li>
           <a v-on:click="toggleFullScreen" class="preview left btn-full-screen">Preview</a>
         </li>
-        <li>
-          <a v-on:click="toggleModal" class="left toggle-modal">Save/Load</a>
-        </li>
 
         <template v-if="isMathSnippet"></template>
       </template>
@@ -20,10 +17,9 @@
     <ul class="right">
       <template v-if="isMdSnippet">
         <li>
-          <router-link to="/syntax" class="prism right">Syntax</router-link>
+          <a v-on:click="toggleModal" class="left toggle-modal">Save/Load</a>
         </li>
       </template>
-      <template v-if="isMathSnippet"></template>
     </ul>
   </footer>
 </template>
@@ -73,7 +69,7 @@ export default {
       var modal = document.querySelector(".modal");
       modal.classList.toggle("show-modal");
       document.querySelector("a.toggle-modal").classList.toggle("btn-active");
-    },
+    }
   },
   created() {
     var item = ["mathSnippets", "mdSnippets"].splice(this.isMdSnippet, 1);

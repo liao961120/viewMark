@@ -1,11 +1,17 @@
 <template>
   <nav>
     <ul class="left">
-      <li>
-        <router-link to="/reader">Reader</router-link>
+      <li v-if="!isArticle">
+        <a class="back" onclick="window.history.back()" >Back</a>
+      </li>
+      <li v-if="isArticle">
+        <a class="back"  @click="back2Reader">Back</a>
       </li>
     </ul>
     <ul>
+      <li>
+        <router-link to="/reader">Reader</router-link>
+      </li>
       <li>
         <router-link to="/">Markdown</router-link>
       </li>
@@ -16,12 +22,34 @@
         <router-link to="/snippets">Snippets</router-link>
       </li>
     </ul>
-    <ul class="right"></ul>
+    <ul class="right">
+      <router-link to="/settings">⚙</router-link>
+    </ul>
   </nav>
 </template>
 
 <script>
-export default {};
+import { bus } from "../main";
+
+export default {
+  data() {
+    return {
+      isArticle: false,
+    };
+  },
+
+  methods: {
+    back2Reader: function() {
+      bus.$emit("toReader", true);
+    }
+  },
+
+  created() {
+    bus.$on("toReader", data => {
+      this.isArticle = !data;
+    });
+  }
+};
 </script>
 
 <style scoped>

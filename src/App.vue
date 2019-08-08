@@ -166,14 +166,14 @@ footer .right a {
   font-weight: bold;
 }
 /* single article style */
-footer .back::before {
-  content: "\00ab ";
+.back::before {
+  content: "\00ab";
   display: inline-block;
   width: 0;
   opacity: 0;
   transition: 0.4s;
 }
-footer .back:hover::before {
+.back:hover::before {
   opacity: 1;
   width: 0.8em;
 }

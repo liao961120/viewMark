@@ -13,18 +13,11 @@
     <div v-html="mdRender" class="content md-content"></div>
     <footer>
       <ul class="left">
-        <li>
-          <a @click="back2Reader" class="back">Back</a>
-        </li>
       </ul>
       <ul class="center">
         <li></li>
       </ul>
       <ul class="right">
-        <li>
-          <router-link to="/print">Print Style</router-link>
-          <router-link to="/syntax">Syntax</router-link>
-        </li>
       </ul>
     </footer>
   </div>
@@ -61,9 +54,6 @@ export default {
   },
 
   methods: {
-    back2Reader: function() {
-      bus.$emit('toReader', true);
-    }
   },
 
   filters: {
