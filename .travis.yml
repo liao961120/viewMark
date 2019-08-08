@@ -9,7 +9,6 @@ cache:
     - node_modules
 script:
   - npm run build
-  - mv src/assets/prism-lang-min dist/
 
 deploy:
   provider: pages
