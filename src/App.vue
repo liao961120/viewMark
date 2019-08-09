@@ -185,8 +185,7 @@ pre[class^=" language"] {
 .content h2::before,
 .content h3::before,
 .content h4::before,
-.content h5::before,
-.content h6::before {
+.content h5::before {
   display: block;
   content: " ";
   height: 60px;

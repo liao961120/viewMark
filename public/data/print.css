@@ -2,29 +2,39 @@
   body {
     font-size: 12pt;
   }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    font-weight: bold !important;
+  }
+  h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+    display: none !important;
+    height: 0 !important;
+    margin-top: 0 !important;
+  }
   p {
     font-size: 1em !important;
   }
-  nav, footer {
+  nav, footer, .toc {
     display: none !important;
   }
   div.outer {
-    margin: 0 auto !important;
+    margin: 0 auto;
   }
   .single-article {
     width: 90% !important;
-    margin: 1cm !important;
+    padding: 1cm !important;
+    margin: 0cm !important;
+  }
+  .content {
+    padding: 0 !important;
   }
   .article-info {
     display: grid;
     grid-template-columns: 1fr 1fr !important;
   }
   .article-info .date {
-    text-align: left !important;
-  }
-  .content {
-    padding: 0 !important;
-    margin-top: 1cm !important;
+    text-align: right !important;
   }
   pre, blockquote {
     page-break-inside: avoid;
