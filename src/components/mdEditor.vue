@@ -1,20 +1,19 @@
 <template>
   <div class="outer">
-    <div
-      v-bind:class="{'container': isOneColumn, 'two-cols': !isOneColumn && !isFullView, 'full-view': isFullView}"
-    >
-      <div class="input md-input">
-        <codemirror
-          v-model="cache.mdInput"
-          v-bind:options="cmOptions"
-          v-on:update="onCmUpdate"
-          v-on:blur="onCmDefocus"
-          v-on:ready="onCmReady"
-        ></codemirror>
-      </div>
+    <div class="input md-input" v-show="!isFullView">
+      <codemirror
+        v-model="cache.mdInput"
+        v-bind:options="cmOptions"
+        v-on:update="onCmUpdate"
+        v-on:blur="onCmDefocus"
+        v-on:ready="onCmReady"
+      ></codemirror>
+    </div>
 
-      <div class="preview md-preview" v-show="!isOneColumn">
-        <div v-html="mdRender"></div>
+    <div class="preview md-preview" v-show="isFullView">
+      <div v-html="mdRender" class="md-content"></div>
+      <div class="toc">
+        <div class="tocbot-toc"></div>
       </div>
     </div>
 
@@ -49,6 +48,10 @@ import renderMathInElement from "katex/dist/contrib/auto-render.min";
 
 // Markdown parser
 let marked = require("marked");
+
+// Toc
+import "tocbot/dist/tocbot.min";
+import "tocbot/dist/tocbot.css";
 
 // components
 import mdSave from "./mdSave.vue";
@@ -138,6 +141,16 @@ export default {
 
       // Modify h6
       this.attachH6();
+
+      // Add toc to .md-content
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: ".tocbot-toc",
+        // Where to grab the headings to build the table of contents.
+        contentSelector: ".md-content",
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: "h2, h3, h4, h5"
+      });
     },
     onCmDefocus(cm) {},
     currentCursor: function() {
@@ -203,24 +216,16 @@ export default {
 
     // Listen on toggle full screen
     bus.$on("toggleFullScreen", data => {
-      // one column edit -> two columns -> one column view
+      // one column edit -> one column view
 
-      // one column edit -> two columns
-      if (data == "edit-view") {
-        this.isFullView = false;
-        this.isOneColumn = false;
-        return;
-      }
       // two columns -> one column view
       if (data == "view") {
-        this.isOneColumn = false;
         this.isFullView = true;
         return;
       }
       // one column view -> one column edit
       if (data == "edit") {
         this.isFullView = false;
-        this.isOneColumn = true;
         return;
       }
 
@@ -233,9 +238,18 @@ export default {
 };
 </script>
 
-<style>
-.container {
-  padding: 0 15%;
+<style scoped>
+.outer {
+}
+.md-input {
+  width: 80%;
+  margin: 50px auto;
+}
+/* Full preview with toc */
+.md-content {
+  width: 65%;
+  margin: 0 25% 0 10%;
+  padding: 0;
 }
 
 /* Full Preview styles */
@@ -275,7 +289,9 @@ export default {
   display: block;
   clear: both;
 }
+</style>
 
+<style>
 /* Codemirror styles */
 .CodeMirror {
   border: 1px solid #eee;
