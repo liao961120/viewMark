@@ -1,6 +1,5 @@
 <template>
   <div class="outer">
-    <md-save v-bind:cache="cache"></md-save>
     <div
       v-bind:class="{'container': isOneColumn, 'two-cols': !isOneColumn && !isFullView, 'full-view': isFullView}"
     >
@@ -24,6 +23,7 @@
       v-bind:isMathSnippet="false"
       v-bind:isOneColumn="isOneColumn"
     ></app-footer>
+    <md-save v-bind:cache="cache"></md-save>
   </div>
 </template>
 
@@ -39,8 +39,8 @@ import "codemirror/addon/selection/mark-selection";
 
 // custom functions
 import utils from "./utils";
-var Prism = require('prismjs');
-import 'prismjs/themes/prism.css';
+var Prism = require("prismjs");
+import "prismjs/themes/prism.css";
 
 // katex
 import katex from "katex";
@@ -158,8 +158,7 @@ export default {
   },
   created() {
     var cache = localStorage.getItem("md-input");
-    if (cache)
-      this.cache = JSON.parse(cache);
+    if (cache) this.cache = JSON.parse(cache);
 
     // Listen to 'mdInputSaved'
     bus.$on("mdInputSaved", data => {
@@ -174,7 +173,7 @@ export default {
       this.cache.title = data.title;
       this.cache.tags = data.tags;
       this.cache.mdInput = data.content;
-      
+
       setTimeout(() => bus.$emit("mdInputSaved", true), 100);
     });
 
