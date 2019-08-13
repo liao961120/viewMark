@@ -82,6 +82,12 @@ h5 {
   content: attr(data-h6);
   font-weight: bold;
 }
+/* content */
+.md-content, .content {
+  font-family: var(--serif);
+}
+
+
 /*/////////////// Footer start /////////////////*/
 footer {
   background: var(--theme-dark);
@@ -173,6 +179,7 @@ pre[class^=" language"] {
   width: 20%;
   top: 90px;
   right: 0;
+  font-family: var(--serif);
 }
 .tocbot-toc .toc-list li {
   list-style: none;

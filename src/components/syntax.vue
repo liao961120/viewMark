@@ -23,12 +23,12 @@
       </div>
     </div>
     <footer>
-      <ul class="left">
-        <a onclick="window.history.back()" class="back">Back</a>
-      </ul>
+      <ul class="left"></ul>
       <ul></ul>
       <ul class="right">
-        <a @click="addSyntax">Highlight</a>
+        <li>
+          <a @click="addSyntax">Highlight</a>
+        </li>
       </ul>
     </footer>
   </div>
@@ -73,7 +73,9 @@ export default {
         this.showMessage = false;
         this.toAdd = [];
       }, 2500);
-      setTimeout(() => {this.search = '';}, 100);
+      setTimeout(() => {
+        this.search = "";
+      }, 100);
     },
 
     addSyntaxToDOM: function(lang) {

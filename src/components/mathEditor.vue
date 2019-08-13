@@ -118,11 +118,23 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 div#math-preview {
   padding: 10px 10px 15px;
   overflow-x: auto;
   font-size: 1.1em;
+}
+.outer {
+  width: 85%;
+  margin: 60px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.outer > .preview {
+  border: 1.5px black solid;
+  border-radius: 10px;
+  padding: 5px;
 }
 </style>
 
