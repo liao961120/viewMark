@@ -181,7 +181,6 @@ export default {
 
     // Listen to 'loadArticle': load content from local storage
     bus.$on("loadArticle", data => {
-      console.log(data);
       this.cache.id = data.id;
       this.cache.date = data.date;
       this.cache.title = data.title;
