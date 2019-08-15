@@ -193,7 +193,7 @@ export default {
     if (localStorage.getItem("md-articles"))
       this.articles = JSON.parse(localStorage.getItem("md-articles"));
 
-    // Update when new article added
+    // Capture mdInputSaved emitted by mdSave.vue (line 145)
     bus.$on("mdInputSaved", () => {
       this.articles = JSON.parse(localStorage.getItem("md-articles"));
     });
@@ -281,6 +281,7 @@ ul {
   font-size: 0.7em;
   font-family: var(--serif);
   overflow-wrap: break-word;
+  overflow: hidden;
   height: 7em;
   padding: 0 0 5px;
 }
