@@ -232,6 +232,17 @@ export default {
       console.log(data);
       console.log("Bug found in toggleFullScreen, mdEditor line194");
     });
+
+    // Listen on mdArticlesUpdated from viewer.vue line 151
+       // Clear cache if article deleted from localStorage
+    bus.$on('mdArticlesUpdated', data => {
+      if (data.deletedArticle == this.cache.id) {
+        this.cache.id = "";
+        this.cache.date = 0;
+        this.cache.title = "";
+        this.cache.tags = [];
+      }
+    })
   },
 
   mounted() {}

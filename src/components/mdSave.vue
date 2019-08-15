@@ -224,6 +224,11 @@ export default {
     bus.$on("mdInputSaved", data => {
       this.mdInputSaved = data;
     });
+
+    // listen to localStorage update
+    bus.$on("mdArticlesUpdated", data => {
+      this.articles = data.articles;
+    })
   },
   filters: {
     toDate: function(value) {

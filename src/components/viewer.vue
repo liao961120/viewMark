@@ -39,7 +39,7 @@
             <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
           </ul>
           <div class="content">{{ article.content | trimString(150) }}</div>
-          <button v-on:click="deleteArticle(id)">Delete</button>
+          <button v-on:click="deleteArticle(article.id)">Delete</button>
         </div>
       </div>
     </transition>
@@ -128,7 +128,31 @@ export default {
       }, 100);
     },
 
-    deleteArticle: function(idx) {}
+    deleteArticle: function(id) {
+      // Find out article idx by id
+      var idx = null;  // for debugging
+      for (let i=0; i<this.articles.length; i++){
+        var article = this.articles[i];
+        if (article.id == id) {
+          if (!window.confirm(`Delete ${article.title}?`)) return;
+          this.articles.splice(i, 1);
+          idx = i;
+          break;
+        }
+      }
+      // Error handling
+      if (idx == null) {
+        console.log('bug at viewer.vue line 145');
+        return
+      }
+
+      // Update local storage
+      localStorage.setItem('md-articles', JSON.stringify(this.articles));
+      setTimeout(() => {
+        bus.$emit('mdArticlesUpdated', {articles: this.articles, deletedArticle: article.id});
+      }, )
+
+    }
   },
 
   filters: {
