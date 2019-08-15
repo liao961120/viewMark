@@ -30,9 +30,18 @@
 import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
+const uslug = require("uslug");
+const uslugify = s => {
+  var url_escaped = String(s).trim().toLowerCase().replace(/\s+/g, '-');
+  if (/^[a-zA-Z0-9_-]*$/.test(url_escaped))  // ASCII code
+    return encodeURIComponent(url_escaped)
+  else  // Unicode
+    return uslug(url_escaped.substring(0, 4))
+};
 var md = require("markdown-it")()
   .use(require("markdown-it-footnote"))
-  .use(require("markdown-it-anchor").default);
+  .use(require("markdown-it-anchor").default, {slugify: uslugify})
+
 var Prism = require("prismjs");
 import "prismjs/themes/prism.css";
 // Toc

@@ -15,6 +15,7 @@
     "markdown-it-footnote": "^3.0.2",
     "prismjs": "^1.17.1",
     "tocbot": "^4.7.0",
+    "uslug": "^1.0.4",
     "vue": "^2.6.10",
     "vue-codemirror": "^4.0.6",
     "vue-router": "^3.0.7"
