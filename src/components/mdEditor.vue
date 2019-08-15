@@ -11,7 +11,7 @@
     </div>
 
     <div class="preview md-preview" v-show="isFullView">
-      <div v-html="mdRender" class="md-content"></div>
+      <div v-html="mdRender" class="md-content content"></div>
       <div class="toc">
         <div class="tocbot-toc"></div>
       </div>
@@ -47,7 +47,9 @@ import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 
 // Markdown parser
-let marked = require("marked");
+var md = require("markdown-it")()
+  .use(require("markdown-it-footnote"))
+  .use(require("markdown-it-anchor").default);
 
 // Toc
 import "tocbot/dist/tocbot.min";
@@ -150,7 +152,7 @@ export default {
         contentSelector: ".md-content",
         // Which headings to grab inside of the contentSelector element.
         headingSelector: "h2, h3, h4, h5",
-        collapseDepth: 3,
+        collapseDepth: 3
       });
     },
     onCmDefocus(cm) {},
@@ -165,7 +167,8 @@ export default {
     mdRender: function() {
       // render Markdown
       var temp = document.createElement("div");
-      temp.innerHTML = marked(this.cache.mdInput);
+      console.log("used markdown-it");
+      temp.innerHTML = md.render(this.cache.mdInput);
 
       return temp.innerHTML;
     }
@@ -234,15 +237,15 @@ export default {
     });
 
     // Listen on mdArticlesUpdated from viewer.vue line 151
-       // Clear cache if article deleted from localStorage
-    bus.$on('mdArticlesUpdated', data => {
+    // Clear cache if article deleted from localStorage
+    bus.$on("mdArticlesUpdated", data => {
       if (data.deletedArticle == this.cache.id) {
         this.cache.id = "";
         this.cache.date = 0;
         this.cache.title = "";
         this.cache.tags = [];
       }
-    })
+    });
   },
 
   mounted() {}

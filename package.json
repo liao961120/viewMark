@@ -10,7 +10,9 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "katex": "^0.10.2",
-    "marked": "^0.7.0",
+    "markdown-it": "^9.1.0",
+    "markdown-it-anchor": "^5.2.4",
+    "markdown-it-footnote": "^3.0.2",
     "prismjs": "^1.17.1",
     "tocbot": "^4.7.0",
     "vue": "^2.6.10",

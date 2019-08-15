@@ -30,7 +30,9 @@
 import "katex/dist/katex.min.css";
 import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
-let marked = require("marked");
+var md = require("markdown-it")()
+  .use(require("markdown-it-footnote"))
+  .use(require("markdown-it-anchor").default);
 var Prism = require("prismjs");
 import "prismjs/themes/prism.css";
 // Toc
@@ -70,7 +72,7 @@ export default {
     mdRender: function() {
       // render Markdown
       var temp = document.createElement("div");
-      temp.innerHTML = marked(this.article.content);
+      temp.innerHTML = md.render(this.article.content);
       return temp.innerHTML;
     }
   },

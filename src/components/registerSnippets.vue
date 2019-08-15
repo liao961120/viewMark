@@ -85,7 +85,9 @@
 
 <script>
 // Markdown parser
-let marked = require("marked");
+var md = require("markdown-it")()
+  .use(require("markdown-it-footnote"))
+  .use(require("markdown-it-anchor").default);
 
 // katex
 import katex from "katex";
@@ -159,7 +161,7 @@ export default {
     toMd: function(value) {
       // render Markdown
       var temp = document.createElement("div");
-      temp.innerHTML = marked(value);
+      temp.innerHTML = md.render(value);
       return temp.innerHTML;
     },
 
