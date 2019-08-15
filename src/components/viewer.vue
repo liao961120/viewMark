@@ -28,18 +28,18 @@
         <div
           v-for="(article, idx) in filterGeneric"
           v-bind:key="article.id"
-          v-bind:value="idx"
+          v-bind:value="article.id"
           class="article"
         >
           <h3>
-            <a v-on:click="toArticle(idx)">{{ article.title | trimString(25) }}</a>
+            <a v-on:click="toArticle(article.id)">{{ article.title | trimString(25) }}</a>
           </h3>
           <span class="date">{{ article.date | toDate }}</span>
           <ul class="tags">
             <li v-for="tag in article.tags" v-bind:key="tag.id" class="tag">{{ tag }}</li>
           </ul>
           <div class="content">{{ article.content | trimString(150) }}</div>
-          <button v-on:click="deleteArticle(idx)">Delete</button>
+          <button v-on:click="deleteArticle(id)">Delete</button>
         </div>
       </div>
     </transition>
@@ -102,10 +102,25 @@ export default {
   },
 
   methods: {
-    toArticle: function(idx) {
+    toArticle: function(id) {
       this.viewArticle.show = false;
       this.viewArticle.idx = null;
       bus.$emit('toReader', false);  // lock nav back btn
+
+      // Find out article idx by id
+      var idx = null;
+      for (let i=0; i<this.articles.length; i++){
+        var article = this.articles[i];
+        if (article.id == id) {
+          idx = i;
+          break;
+        }
+      }
+      // Error handling
+      if (idx == null) {
+        console.log('bug at viewer.vue line 118');
+        return
+      }
 
       setTimeout(() => {
         this.viewArticle.idx = idx;
