@@ -38,7 +38,7 @@ const uslugify = s => {
   else  // Unicode
     return uslug(url_escaped.substring(0, 4))
 };
-var md = require("markdown-it")()
+var md = require("markdown-it")({ html: true })
   .use(require("markdown-it-footnote"))
   .use(require("markdown-it-anchor").default, {slugify: uslugify})
 

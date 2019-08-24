@@ -49,15 +49,19 @@ import renderMathInElement from "katex/dist/contrib/auto-render.min";
 // Markdown parser
 const uslug = require("uslug");
 const uslugify = s => {
-  var url_escaped = String(s).trim().toLowerCase().replace(/\s+/g, '-');
-  if (/^[a-zA-Z0-9_-]*$/.test(url_escaped))  // ASCII code
-    return encodeURIComponent(url_escaped)
-  else  // Unicode
-    return uslug(url_escaped.substring(0, 4))
+  var url_escaped = String(s)
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+  if (/^[a-zA-Z0-9_-]*$/.test(url_escaped))
+    // ASCII code
+    return encodeURIComponent(url_escaped);
+  // Unicode
+  else return uslug(url_escaped.substring(0, 4));
 };
-var md = require("markdown-it")()
+var md = require("markdown-it")({ html: true })
   .use(require("markdown-it-footnote"))
-  .use(require("markdown-it-anchor").default, {slugify: uslugify})
+  .use(require("markdown-it-anchor").default, { slugify: uslugify });
 
 // Toc
 import "tocbot/dist/tocbot.min";
@@ -259,8 +263,6 @@ export default {
 </script>
 
 <style scoped>
-.outer {
-}
 .md-input {
   width: 80%;
   margin: 50px auto;
