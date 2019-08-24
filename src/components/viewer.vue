@@ -55,8 +55,8 @@
         ></single-article>
       </transition-group>
     </div>
-  
-  <footer v-show="!viewArticle.show"></footer>
+
+    <footer v-show="!viewArticle.show"></footer>
   </div>
 </template>
 
@@ -105,11 +105,11 @@ export default {
     toArticle: function(id) {
       this.viewArticle.show = false;
       this.viewArticle.idx = null;
-      bus.$emit('toReader', false);  // lock nav back btn
+      bus.$emit("toReader", false); // lock nav back btn
 
       // Find out article idx by id
       var idx = null;
-      for (let i=0; i<this.articles.length; i++){
+      for (let i = 0; i < this.articles.length; i++) {
         var article = this.articles[i];
         if (article.id == id) {
           idx = i;
@@ -118,8 +118,8 @@ export default {
       }
       // Error handling
       if (idx == null) {
-        console.log('bug at viewer.vue line 118');
-        return
+        console.log("bug at viewer.vue line 118");
+        return;
       }
 
       setTimeout(() => {
@@ -130,8 +130,8 @@ export default {
 
     deleteArticle: function(id) {
       // Find out article idx by id
-      var idx = null;  // for debugging
-      for (let i=0; i<this.articles.length; i++){
+      var idx = null; // for debugging
+      for (let i = 0; i < this.articles.length; i++) {
         var article = this.articles[i];
         if (article.id == id) {
           if (!window.confirm(`Delete ${article.title}?`)) return;
@@ -142,16 +142,18 @@ export default {
       }
       // Error handling
       if (idx == null) {
-        console.log('bug at viewer.vue line 145');
-        return
+        console.log("bug at viewer.vue line 145");
+        return;
       }
 
       // Update local storage
-      localStorage.setItem('md-articles', JSON.stringify(this.articles));
+      localStorage.setItem("md-articles", JSON.stringify(this.articles));
       setTimeout(() => {
-        bus.$emit('mdArticlesUpdated', {articles: this.articles, deletedArticle: article.id});
-      }, )
-
+        bus.$emit("mdArticlesUpdated", {
+          articles: this.articles,
+          deletedArticle: article.id
+        });
+      });
     }
   },
 
