@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 
 // register routes
 const router = new VueRouter({
-  routes: Routes
+    routes: Routes
 })
 
 
@@ -22,6 +22,6 @@ const router = new VueRouter({
 export const bus = new Vue({});
 
 new Vue({
-  render: h => h(App),
-  router: router
+    render: h => h(App),
+    router: router
 }).$mount('#app')

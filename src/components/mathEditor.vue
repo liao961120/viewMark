@@ -1,20 +1,20 @@
 <template>
-  <div class="math two-cols outer">
-    <div class="input math-input">
-      <codemirror
-        v-model="mathInput"
-        v-bind:options="cmOptions"
-        v-on:update="onCmUpdate"
-        v-on:ready="onCmReady"
-      ></codemirror>
-    </div>
+    <div class="math two-cols outer">
+        <div class="input math-input">
+            <codemirror
+                v-model="mathInput"
+                v-bind:options="cmOptions"
+                v-on:update="onCmUpdate"
+                v-on:ready="onCmReady"
+            ></codemirror>
+        </div>
 
-    <div class="preview">
-      <div id="math-preview" v-html="mathRender"></div>
-    </div>
+        <div class="preview">
+            <div id="math-preview" v-html="mathRender"></div>
+        </div>
 
-    <app-footer v-bind:isMathSnippet="true" v-bind:isMdSnippet="false"></app-footer>
-  </div>
+        <app-footer v-bind:isMathSnippet="true" v-bind:isMdSnippet="false"></app-footer>
+    </div>
 </template>
 
 <script>
@@ -37,104 +37,106 @@ import appFooter from "./footer.vue";
 import { bus } from "../main";
 
 export default {
-  components: {
-    "app-footer": appFooter
-  },
+    components: {
+        "app-footer": appFooter
+    },
 
-  data() {
-    return {
-      mathInput: "\\frac{a}{b}",
-      cmOptions: {
-        // codemirror options
-        tabSize: 2,
-        mode: "stex",
-        theme: "material",
-        styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
-        styleActiveLine: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        extraKeys: {
-          // Tab to space
-          Tab: function(cm) {
-            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-            cm.replaceSelection(spaces);
-          }
+    data() {
+        return {
+            mathInput: "\\frac{a}{b}",
+            cmOptions: {
+                // codemirror options
+                tabSize: 2,
+                mode: "stex",
+                theme: "material",
+                styleSelectedText: true, //enable styling with .CodeMirror-selectedtext
+                styleActiveLine: true,
+                lineNumbers: true,
+                lineWrapping: true,
+                extraKeys: {
+                    // Tab to space
+                    Tab: function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(
+                            " "
+                        );
+                        cm.replaceSelection(spaces);
+                    }
+                }
+            },
+            cmObject: {}
+        };
+    },
+    methods: {
+        showCode: function() {
+            console.log(this.mathInput);
+        },
+        onCmReady: function(cm) {
+            // Expose cm object to data
+            this.cmObject = cm;
+        },
+        onCmUpdate: function(cm) {
+            localStorage.setItem("math-input", this.mathInput);
         }
-      },
-      cmObject: {}
-    };
-  },
-  methods: {
-    showCode: function() {
-      console.log(this.mathInput);
     },
-    onCmReady: function(cm) {
-      // Expose cm object to data
-      this.cmObject = cm;
+    computed: {
+        mathRender: function() {
+            var ele = document.querySelector("#math-preview");
+            try {
+                var html = katex.renderToString(this.mathInput, ele, {
+                    throwOnError: true
+                });
+            } catch (e) {
+                var html = "error";
+            }
+            return html;
+        }
     },
-    onCmUpdate: function(cm) {
-      localStorage.setItem("math-input", this.mathInput);
+
+    created() {
+        if (localStorage.getItem("math-input"))
+            this.mathInput = localStorage.getItem("math-input");
+
+        bus.$on("insertSnippet", data => {
+            // Check md or math snippet
+            if (data.isMdSnippet) return;
+
+            this.mathInput += data.snippet;
+            // Get cursor position
+            var linenum = this.cmObject.getCursor().line + 0;
+            var ch = this.cmObject.getCursor().ch + 0;
+            this.cmObject.focus();
+            // Move to cursor position
+            setTimeout(() => {
+                console.log(this.cmObject, linenum, ch);
+                let ch_start = ch + parseInt(data.cursorPos[0]);
+                let ch_end = ch + parseInt(data.cursorPos[1]);
+                this.cmObject.setSelection(
+                    { line: linenum, ch: ch_start },
+                    { line: linenum, ch: ch_end }
+                );
+            }, 100);
+        }); // end $on(insertSnippet)
     }
-  },
-  computed: {
-    mathRender: function() {
-      var ele = document.querySelector("#math-preview");
-      try {
-        var html = katex.renderToString(this.mathInput, ele, {
-          throwOnError: true
-        });
-      } catch (e) {
-        var html = "error";
-      }
-      return html;
-    }
-  },
-
-  created() {
-    if (localStorage.getItem("math-input"))
-      this.mathInput = localStorage.getItem("math-input");
-
-    bus.$on("insertSnippet", data => {
-      // Check md or math snippet
-      if (data.isMdSnippet) return;
-
-      this.mathInput += data.snippet;
-      // Get cursor position
-      var linenum = this.cmObject.getCursor().line + 0;
-      var ch = this.cmObject.getCursor().ch + 0;
-      this.cmObject.focus();
-      // Move to cursor position
-      setTimeout(() => {
-        console.log(this.cmObject, linenum, ch);
-        let ch_start = ch + parseInt(data.cursorPos[0]);
-        let ch_end = ch + parseInt(data.cursorPos[1]);
-        this.cmObject.setSelection(
-          { line: linenum, ch: ch_start },
-          { line: linenum, ch: ch_end }
-        );
-      }, 100);
-    }); // end $on(insertSnippet)
-  }
 };
 </script>
 
 <style scoped>
 div#math-preview {
-  padding: 10px 10px 15px;
-  overflow-x: auto;
-  font-size: 1.1em;
+    padding: 10px 10px 15px;
+    overflow-x: auto;
+    font-size: 1.1em;
 }
 .outer {
-  width: 85%;
-  margin: 60px auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+    width: 85%;
+    margin: 60px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 .outer > .preview {
-  border: 1.5px black solid;
-  border-radius: 10px;
-  padding: 5px;
+    border: 1.5px black solid;
+    border-radius: 10px;
+    padding: 5px;
 }
 </style>
 
