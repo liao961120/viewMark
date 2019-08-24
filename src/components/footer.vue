@@ -67,14 +67,16 @@ export default {
     }
   },
   created() {
-    var item = ["mathSnippets", "mdSnippets"].splice(this.isMdSnippet, 1);
+    var item = ["math-snippets", "md-snippets"].splice(this.isMdSnippet, 1);
+    item = item[0]
 
     // Initialize
     if (localStorage.getItem(item))
       this.snippets = JSON.parse(localStorage.getItem(item));
 
     bus.$on("updateSnippets", data => {
-      this.snippets = data[item];
+      var camelCase = item.replace(/(\-\w)/g, function(m){return m[1].toUpperCase();});
+      this.snippets = data[camelCase];
     });
   },
 

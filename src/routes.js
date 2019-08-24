@@ -5,6 +5,7 @@ import articleViewer from "./components/viewer.vue"
 import mediaPrint from "./components/mediaPrint.vue"
 import addSyntax from "./components/syntax.vue"
 import settings from "./components/settings.vue"
+import importExport from "./components/import-export-localStorage.vue"
 
 export default [
     {path: '/', component: mdEditor},
@@ -14,4 +15,5 @@ export default [
     {path: '/print', component: mediaPrint},
     {path: '/syntax', component: addSyntax},
     {path: '/settings/', component: settings},
+    {path: '/importExport', component: importExport},
 ]

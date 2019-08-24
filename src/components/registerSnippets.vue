@@ -127,9 +127,9 @@ export default {
 
       // Save to localStorage
       if (this.mdSnippets.length > 0)
-        localStorage.setItem("mdSnippets", JSON.stringify(this.mdSnippets));
+        localStorage.setItem("md-snippets", JSON.stringify(this.mdSnippets));
       if (this.mathSnippets.length > 0)
-        localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
+        localStorage.setItem("math-snippets", JSON.stringify(this.mathSnippets));
 
       // Clean up
       this.toRegister.snippet = "";
@@ -148,8 +148,8 @@ export default {
       if (isMdSnippet) this.mdSnippets.splice(idx, 1);
       else this.mathSnippets.splice(idx, 1);
 
-      localStorage.setItem("mdSnippets", JSON.stringify(this.mdSnippets));
-      localStorage.setItem("mathSnippets", JSON.stringify(this.mathSnippets));
+      localStorage.setItem("md-snippets", JSON.stringify(this.mdSnippets));
+      localStorage.setItem("math-snippets", JSON.stringify(this.mathSnippets));
 
       // Emit event
       bus.$emit("updateSnippets", {
@@ -210,10 +210,10 @@ export default {
 
   created() {
     // Load snippets
-    if (localStorage.getItem("mdSnippets"))
-      this.mdSnippets = JSON.parse(localStorage.getItem("mdSnippets"));
-    if (localStorage.getItem("mathSnippets"))
-      this.mathSnippets = JSON.parse(localStorage.getItem("mathSnippets"));
+    if (localStorage.getItem("md-snippets"))
+      this.mdSnippets = JSON.parse(localStorage.getItem("md-snippets"));
+    if (localStorage.getItem("math-snippets"))
+      this.mathSnippets = JSON.parse(localStorage.getItem("math-snippets"));
 
     // Emit event
     bus.$emit("updateSnippets", {

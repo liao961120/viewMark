@@ -14,7 +14,7 @@
         </p>
       </router-link>
 
-      <router-link to="#" tag="div" class="three">
+      <router-link to="/importExport" tag="div" class="three">
         <h3>Export/Import Data</h3>
         <p>Not implemented yet.</p>
       </router-link>
