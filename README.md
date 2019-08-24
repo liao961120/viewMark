@@ -7,8 +7,6 @@
 1. Article editing
     - add/delete tags
 
-1. Backup: export/import user settings
-
 ## On the shoulders of ...
 
 - [Vue](https://vuejs.org)
